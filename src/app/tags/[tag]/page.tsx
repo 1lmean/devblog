@@ -7,13 +7,14 @@ import { getAllTags, getPostsByTag } from "@/lib/posts";
 type Props = { params: Promise<{ tag: string }> };
 
 export async function generateStaticParams() {
-  return getAllTags().map((tag) => ({ tag }));
+  const tags = await getAllTags();
+  return tags.map((tag) => ({ tag }));
 }
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const { tag: raw } = await props.params;
   const tag = decodeURIComponent(raw);
-  const posts = getPostsByTag(tag);
+  const posts = await getPostsByTag(tag);
   if (posts.length === 0) return { title: "태그" };
   return {
     title: `#${tag}`,
@@ -24,7 +25,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 export default async function TagPage(props: Props) {
   const { tag: raw } = await props.params;
   const tag = decodeURIComponent(raw);
-  const posts = getPostsByTag(tag);
+  const posts = await getPostsByTag(tag);
   if (posts.length === 0) notFound();
 
   return (

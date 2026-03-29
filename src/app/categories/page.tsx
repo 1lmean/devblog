@@ -7,9 +7,9 @@ export const metadata: Metadata = {
   description: "글 카테고리 목록",
 };
 
-export default function CategoriesIndexPage() {
-  const categories = getAllCategories();
-  const posts = getAllPosts();
+export default async function CategoriesIndexPage() {
+  const categories = await getAllCategories();
+  const posts = await getAllPosts();
   const countFor = (c: string) => posts.filter((p) => p.category === c).length;
 
   return (

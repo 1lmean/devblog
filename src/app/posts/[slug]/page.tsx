@@ -10,12 +10,13 @@ import { getAllPosts, getPostBySlug } from "@/lib/posts";
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateStaticParams() {
-  return getAllPosts().map((post) => ({ slug: post.slug }));
+  const posts = await getAllPosts();
+  return posts.map((post) => ({ slug: post.slug }));
 }
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const { slug } = await props.params;
-  const post = getPostBySlug(slug);
+  const post = await getPostBySlug(slug);
   if (!post) return { title: "글을 찾을 수 없음" };
   const url = `${getSiteUrl()}/posts/${slug}`;
   return {
@@ -37,7 +38,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 
 export default async function PostPage(props: Props) {
   const { slug } = await props.params;
-  const post = getPostBySlug(slug);
+  const post = await getPostBySlug(slug);
   if (!post) notFound();
 
   return (

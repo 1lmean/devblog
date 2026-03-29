@@ -7,9 +7,9 @@ export const metadata: Metadata = {
   description: "글에 달린 태그 목록",
 };
 
-export default function TagsIndexPage() {
-  const tags = getAllTags();
-  const posts = getAllPosts();
+export default async function TagsIndexPage() {
+  const tags = await getAllTags();
+  const posts = await getAllPosts();
   const countFor = (tag: string) => posts.filter((p) => p.tags.includes(tag)).length;
 
   return (

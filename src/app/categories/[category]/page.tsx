@@ -7,13 +7,14 @@ import { getAllCategories, getPostsByCategory } from "@/lib/posts";
 type Props = { params: Promise<{ category: string }> };
 
 export async function generateStaticParams() {
-  return getAllCategories().map((category) => ({ category }));
+  const categories = await getAllCategories();
+  return categories.map((category) => ({ category }));
 }
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const { category: raw } = await props.params;
   const category = decodeURIComponent(raw);
-  const posts = getPostsByCategory(category);
+  const posts = await getPostsByCategory(category);
   if (posts.length === 0) return { title: "카테고리" };
   return {
     title: category,
@@ -24,7 +25,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 export default async function CategoryPage(props: Props) {
   const { category: raw } = await props.params;
   const category = decodeURIComponent(raw);
-  const posts = getPostsByCategory(category);
+  const posts = await getPostsByCategory(category);
   if (posts.length === 0) notFound();
 
   return (

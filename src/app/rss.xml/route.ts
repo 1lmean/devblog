@@ -2,9 +2,9 @@ import { getAllPosts } from "@/lib/posts";
 import { getSiteUrl } from "@/lib/site";
 import { escapeXml } from "@/lib/xml";
 
-export function GET() {
+export async function GET() {
   const siteUrl = getSiteUrl();
-  const posts = getAllPosts();
+  const posts = await getAllPosts();
   const items = posts
     .map((post) => {
       const url = `${siteUrl}/posts/${post.slug}`;

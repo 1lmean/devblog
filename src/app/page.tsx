@@ -3,8 +3,8 @@ import { TagLinks } from "@/components/TagLinks";
 import { formatPostDate } from "@/lib/format-date";
 import { getAllPosts } from "@/lib/posts";
 
-export default function Home() {
-  const posts = getAllPosts();
+export default async function Home() {
+  const posts = await getAllPosts();
 
   return (
     <div className="flex flex-1 flex-col">
