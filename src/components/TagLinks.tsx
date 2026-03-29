@@ -9,7 +9,7 @@ export function TagLinks({ tags, className = "" }: { tags: string[]; className?:
         <li key={tag}>
           <Link
             href={`/tags/${encodeURIComponent(tag)}`}
-            className="inline-flex rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs font-medium text-zinc-700 transition-colors hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
+            className="inline-flex rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-medium text-zinc-700 transition-colors hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
           >
             #{tag}
           </Link>
@@ -33,7 +33,7 @@ export function CategoryLink({ category }: { category: string }) {
 export function PostMetaLine({ post }: { post: PostMeta }) {
   if (!post.category && post.tags.length === 0) return null;
   return (
-    <div className="mt-3 flex flex-wrap items-center gap-3">
+    <div className="mt-10 flex flex-wrap items-center gap-3">
       {post.category ? <CategoryLink category={post.category} /> : null}
       <TagLinks tags={post.tags} />
     </div>
