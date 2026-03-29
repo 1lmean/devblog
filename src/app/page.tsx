@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { TagLinks } from "@/components/TagLinks";
-import { formatPostDate } from "@/lib/format-date";
+import { ArrowRight } from "lucide-react";
+import { PostCard } from "@/components/PostCard";
 import { getAllPosts } from "@/lib/posts";
 
 export default async function Home() {
@@ -8,47 +8,58 @@ export default async function Home() {
 
   return (
     <div className="flex flex-1 flex-col">
-      <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-12">
-        <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
-          최근 글
-        </h1>
-        <p className="mt-2 text-zinc-600 dark:text-zinc-400">
-          Markdown으로 작성한 글 목록입니다.
-        </p>
-        <ul className="mt-10 divide-y divide-zinc-200 dark:divide-zinc-800">
-          {posts.map((post) => (
-            <li key={post.slug} className="py-6 first:pt-0">
-              <div>
-                <Link
-                  href={`/posts/${post.slug}`}
-                  className="group block focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 dark:focus-visible:ring-zinc-600"
-                >
-                  <h2 className="text-lg font-semibold text-zinc-900 group-hover:underline dark:text-zinc-50">
-                    {post.title}
-                  </h2>
-                  <time
-                    dateTime={post.date}
-                    className="mt-1 block text-sm text-zinc-500 dark:text-zinc-400"
-                  >
-                    {formatPostDate(post.date)}
-                  </time>
-                  {post.description ? (
-                    <p className="mt-2 line-clamp-2 text-sm text-zinc-600 dark:text-zinc-400">
-                      {post.description}
-                    </p>
-                  ) : null}
-                </Link>
-                <TagLinks tags={post.tags} className="mt-3" />
-              </div>
-            </li>
-          ))}
-        </ul>
-        {posts.length === 0 ? (
-          <p className="mt-8 text-zinc-500 dark:text-zinc-400">
-            아직 글이 없습니다. <code className="rounded bg-zinc-100 px-1 dark:bg-zinc-800">content/posts</code>에{" "}
-            <code className="rounded bg-zinc-100 px-1 dark:bg-zinc-800">.md</code> 파일을 추가해 보세요.
+      <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-12">
+        {/* 소개 */}
+        <section className="mb-16">
+          <h1 className="text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+            1lmean 🍓
+          </h1>
+          <p className="mt-3 leading-relaxed text-zinc-600 dark:text-zinc-400">
+            개발하면서 배운 것들을 기록하는 블로그입니다.
           </p>
-        ) : null}
+        </section>
+
+        {/* 최근 글 */}
+        <section className="mb-16">
+          <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+            Recent Posts
+          </h1>
+          <p className="mt-3 leading-relaxed text-zinc-600 dark:text-zinc-400">
+            개발하면서 배우거나 공부한 내용들을 기록합니다. 
+          </p>
+          {posts.length === 0 ? (
+            <p className="text-zinc-500 dark:text-zinc-400">아직 글이 없습니다.</p>
+          ) : (
+            <ul className="flex space-x-8 mt-3">
+              {posts.slice(0, 4).map((post) => (
+                <PostCard key={post.slug} post={post} />
+              ))}
+            </ul>
+          )}
+
+          {posts.length > 4 ? (
+            <Link
+              href="/posts"
+              className="mt-4 inline-flex items-center gap-1 text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+            >
+              모든 글 보기
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          ) : null}
+        </section>
+
+        {/*  주요 프로젝트 */}
+        <section className="mb-16">
+          <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+            Featured Projects
+          </h1>
+          <p className="mt-2 text-zinc-600 dark:text-zinc-400">
+            주요 프로젝트 목록입니다.
+          </p>
+          <ul className="flex space-x-8 mt-3">
+            {/* <ProjectCard /> */}
+          </ul>
+        </section>
       </main>
     </div>
   );
