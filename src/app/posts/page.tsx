@@ -10,7 +10,7 @@ export default async function Posts() {
     <div className="flex flex-1 flex-col">
       <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-12">
         <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
-          최근 글
+          글 목록
         </h1>
         <p className="mt-2 text-zinc-600 dark:text-zinc-400">
           Notion으로 작성한 글 목록입니다.

@@ -43,24 +43,24 @@ export default async function PostPage(props: Props) {
 
   return (
     <div className="flex flex-1 flex-col">
-      <article className="mx-auto w-full max-w-6xl flex-1 px-6 py-12">
+      <article className="mx-auto w-full max-w-5xl flex-1 px-6 py-12">
         <p className="text-sm text-zinc-500 dark:text-zinc-400">
           <Link href="/" className="hover:text-zinc-800 dark:hover:text-zinc-200">
             ← 목록
           </Link>
         </p>
-        <header className="mt-6 border-b border-zinc-200 pb-8 dark:border-zinc-800">
-          <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
-            {post.title}
-          </h1>
+        <header className="mt-15 border-b border-zinc-200 pb-8 dark:border-zinc-800">
           <time
             dateTime={post.date}
-            className="mt-3 block text-sm text-zinc-500 dark:text-zinc-400"
+            className="block text-sm text-zinc-500 dark:text-zinc-400"
           >
             {formatPostDate(post.date)}
           </time>
+          <h1 className="mt-5 text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+            {post.title}
+          </h1>
           {post.description ? (
-            <p className="mt-4 text-lg text-zinc-600 dark:text-zinc-400">{post.description}</p>
+            <p className="mt-2 text-m text-zinc-600 dark:text-zinc-400">{post.description}</p>
           ) : null}
           <PostMetaLine post={post} />
         </header>
