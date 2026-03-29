@@ -14,7 +14,7 @@ export default async function TagsIndexPage() {
 
   return (
     <div className="flex flex-1 flex-col">
-      <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-12">
+      <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-12">
         <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">태그</h1>
         <p className="mt-2 text-zinc-600 dark:text-zinc-400">태그를 눌러 관련 글만 모아 볼 수 있습니다.</p>
         {tags.length === 0 ? (

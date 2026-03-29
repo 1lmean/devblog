@@ -30,7 +30,7 @@ export default async function CategoryPage(props: Props) {
 
   return (
     <div className="flex flex-1 flex-col">
-      <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-12">
+      <main className="page-shell flex-1 py-12 md:py-14">
         <p className="text-sm text-zinc-500 dark:text-zinc-400">
           <Link href="/categories" className="hover:text-zinc-800 dark:hover:text-zinc-200">
             ← 모든 카테고리

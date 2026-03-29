@@ -14,7 +14,7 @@ export default async function CategoriesIndexPage() {
 
   return (
     <div className="flex flex-1 flex-col">
-      <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-12">
+      <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-12">
         <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">카테고리</h1>
         <p className="mt-2 text-zinc-600 dark:text-zinc-400">카테고리별로 글을 모아 볼 수 있습니다.</p>
         {categories.length === 0 ? (

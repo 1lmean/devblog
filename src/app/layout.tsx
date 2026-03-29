@@ -54,8 +54,10 @@ export default function RootLayout({
         <Providers>
           <SiteHeader />
           {children}
-          <footer className="mt-auto border-t border-zinc-200 py-8 text-center text-sm text-zinc-500 dark:border-zinc-800 dark:text-zinc-400">
-            © {new Date().getFullYear()}
+          <footer className="mt-auto border-t border-zinc-200 dark:border-zinc-800">
+            <div className="page-shell py-10 text-center text-sm text-zinc-500 dark:text-zinc-400">
+              © {new Date().getFullYear()}
+            </div>
           </footer>
         </Providers>
       </body>

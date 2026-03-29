@@ -43,7 +43,7 @@ export default async function PostPage(props: Props) {
 
   return (
     <div className="flex flex-1 flex-col">
-      <article className="mx-auto w-full max-w-3xl flex-1 px-6 py-12">
+      <article className="mx-auto w-full max-w-6xl flex-1 px-6 py-12">
         <p className="text-sm text-zinc-500 dark:text-zinc-400">
           <Link href="/" className="hover:text-zinc-800 dark:hover:text-zinc-200">
             ← 목록
