@@ -1,20 +1,47 @@
 "use client";
 
+import type React from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { slugify } from "@/lib/toc";
+
+function getHeadingText(children: React.ReactNode): string {
+  if (typeof children === "string") return children;
+  if (typeof children === "number") return String(children);
+  if (Array.isArray(children)) return children.map(getHeadingText).join("");
+  if (children !== null && typeof children === "object" && "props" in children) {
+    return getHeadingText((children.props as { children?: React.ReactNode }).children);
+  }
+  return "";
+}
 
 const components: Components = {
-  h1: (props) => (
+  h1: ({ children, ...props }) => (
     <h1
+      id={slugify(getHeadingText(children))}
       className="mt-10 text-3xl font-bold tracking-tight text-foreground first:mt-0"
       {...props}
-    />
+    >
+      {children}
+    </h1>
   ),
-  h2: (props) => (
-    <h2 className="mt-10 text-2xl font-semibold tracking-tight" {...props} />
+  h2: ({ children, ...props }) => (
+    <h2
+      id={slugify(getHeadingText(children))}
+      className="mt-10 text-2xl font-semibold tracking-tight"
+      {...props}
+    >
+      {children}
+    </h2>
   ),
-  h3: (props) => (
-    <h3 className="mt-8 text-xl font-semibold tracking-tight" {...props} />
+  h3: ({ children, ...props }) => (
+    <h3
+      id={slugify(getHeadingText(children))}
+      className="mt-8 text-xl font-semibold tracking-tight"
+      {...props}
+    >
+      {children}
+    </h3>
   ),
   p: (props) => (
     <p className="mt-4 leading-7 text-zinc-700 dark:text-zinc-300" {...props} />
