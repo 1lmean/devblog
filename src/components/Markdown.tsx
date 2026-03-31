@@ -2,6 +2,7 @@
 
 import type React from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
+import rehypeHighlight from "rehype-highlight";
 import remarkGfm from "remark-gfm";
 import { slugify } from "@/lib/toc";
 
@@ -86,7 +87,7 @@ const components: Components = {
   },
   pre: (props) => (
     <pre
-      className="my-6 overflow-x-auto rounded-xl border border-zinc-200 bg-zinc-50 p-4 text-sm dark:border-zinc-700 dark:bg-zinc-900"
+      className="my-6 overflow-x-auto rounded-xl border border-zinc-200 bg-zinc-50 p-4 font-mono text-sm dark:border-zinc-700 dark:bg-zinc-900"
       {...props}
     />
   ),
@@ -107,7 +108,11 @@ const components: Components = {
 export function Markdown({ content }: { content: string }) {
   return (
     <article className="markdown-content max-w-none">
-      <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        rehypePlugins={[[rehypeHighlight, { detect: false }]]}
+        components={components}
+      >
         {content}
       </ReactMarkdown>
     </article>
