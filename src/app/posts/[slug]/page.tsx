@@ -66,7 +66,7 @@ export default async function PostPage(props: Props) {
               ) : null}
               <PostMetaLine post={post} />
             </header>
-            <div className="pt-10">
+            <div className="pt-10 pb-80">
               <Markdown content={post.content} />
             </div>
           </article>
