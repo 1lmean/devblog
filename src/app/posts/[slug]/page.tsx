@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
+import { PostBackButton } from "@/components/PostBackButton";
 import { Markdown } from "@/components/Markdown";
 import { PostMetaLine } from "@/components/TagLinks";
 import { TableOfContents } from "@/components/TableOfContents";
@@ -50,11 +50,7 @@ export default async function PostPage(props: Props) {
       <div className="mx-auto w-full max-w-5xl flex-1 px-6 py-12">
         <div className="flex gap-16">
           <article className="min-w-0 flex-1">
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">
-              <Link href="/" className="hover:text-zinc-800 dark:hover:text-zinc-200">
-                ← 목록
-              </Link>
-            </p>
+            <PostBackButton />
             <header className="mt-15 border-b border-zinc-200 pb-8 dark:border-zinc-800">
               <time
                 dateTime={post.date}
