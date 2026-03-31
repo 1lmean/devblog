@@ -13,11 +13,14 @@ export function SiteHeader() {
           <NavButton href="/posts" className="h-9 px-3">
             블로그
           </NavButton>
-          <NavButton href="/tags" className="h-9 px-3">
+          {/* <NavButton href="/tags" className="h-9 px-3">
             태그
           </NavButton>
           <NavButton href="/categories" className="h-9 px-3">
             카테고리
+          </NavButton> */}
+          <NavButton href="/projects" className="h-9 px-3">
+            프로젝트
           </NavButton>
         </nav>
         <nav className="flex items-center gap-2 text-sm">

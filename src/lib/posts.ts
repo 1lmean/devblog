@@ -113,12 +113,3 @@ export async function getAllCategories(): Promise<string[]> {
   return [...seen].sort((a, b) => a.localeCompare(b, "ko"));
 }
 
-export async function getPostsByTag(tag: string): Promise<PostMeta[]> {
-  const posts = await getAllPosts();
-  return posts.filter((p) => p.tags.includes(tag.trim()));
-}
-
-export async function getPostsByCategory(category: string): Promise<PostMeta[]> {
-  const posts = await getAllPosts();
-  return posts.filter((p) => p.category === category.trim());
-}
