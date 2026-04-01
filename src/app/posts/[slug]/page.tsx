@@ -58,7 +58,7 @@ export default async function PostPage(props: Props) {
               >
                 {formatPostDate(post.date)}
               </time>
-              <h1 className="mt-5 text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+              <h1 className="mt-5 text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
                 {post.title}
               </h1>
               {post.description ? (
