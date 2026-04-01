@@ -19,6 +19,80 @@ const notion = new Client({ auth: process.env.NOTION_API_KEY });
 const n2m = new NotionToMarkdown({ notionClient: notion });
 const DATABASE_ID = process.env.NOTION_DATABASE_ID!;
 
+// ── Notion color → CSS value ───────────────────────────────────────────────
+const NOTION_COLORS: Record<string, string> = {
+  gray: "#9b9a97", brown: "#64473a", orange: "#d9730d",
+  yellow: "#dfab01", green: "#0f7b6c", blue: "#0b6e99",
+  purple: "#6940a5", pink: "#ad1a72", red: "#e03e3e",
+  gray_background: "#f1f1ef", brown_background: "#f4eeee",
+  orange_background: "#fbecdd", yellow_background: "#fbf3db",
+  green_background: "#edf3ec", blue_background: "#e7f3f8",
+  purple_background: "#f4f0f9", pink_background: "#f9f0f5",
+  red_background: "#fde8e8",
+};
+
+type RichTextItem = {
+  plain_text: string;
+  annotations: {
+    bold: boolean; italic: boolean; strikethrough: boolean;
+    underline: boolean; code: boolean; color: string;
+  };
+  href?: string | null;
+};
+
+function processRichText(richText: RichTextItem[]): string {
+  return richText.map((rt) => {
+    const { plain_text, annotations, href } = rt;
+    const color = annotations.color;
+    const hasColor = color !== "default";
+
+    let text = plain_text
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+
+    if (annotations.code)          text = `<code>${text}</code>`;
+    if (annotations.bold)          text = `<strong>${text}</strong>`;
+    if (annotations.italic)        text = `<em>${text}</em>`;
+    if (annotations.strikethrough) text = `<del>${text}</del>`;
+    if (annotations.underline)     text = `<u>${text}</u>`;
+    if (href)                      text = `<a href="${href}">${text}</a>`;
+
+    if (hasColor) {
+      const style = color.endsWith("_background")
+        ? `background-color:${NOTION_COLORS[color] ?? "transparent"}`
+        : `color:${NOTION_COLORS[color] ?? "inherit"}`;
+      text = `<span style="${style}">${text}</span>`;
+    }
+
+    return text;
+  }).join("");
+}
+
+function needsColorHtml(richText: RichTextItem[], blockColor?: string): boolean {
+  if (blockColor && blockColor !== "default") return true;
+  return richText.some((rt) => rt.annotations.color !== "default");
+}
+
+// Register color-aware transformer for paragraph blocks
+n2m.setCustomTransformer("paragraph", async (block: unknown) => {
+  const b = block as { paragraph: { rich_text: RichTextItem[]; color: string } };
+  const { rich_text, color: blockColor } = b.paragraph ?? {};
+  if (!rich_text?.length) return "";
+  if (!needsColorHtml(rich_text, blockColor)) return false;
+
+  const content = processRichText(rich_text);
+
+  if (blockColor && blockColor !== "default") {
+    const style = blockColor.endsWith("_background")
+      ? `background-color:${NOTION_COLORS[blockColor]};padding:0.25em 0.5em;border-radius:4px`
+      : `color:${NOTION_COLORS[blockColor]}`;
+    return `<p style="${style}">${content}</p>`;
+  }
+
+  return `<p>${content}</p>`;
+});
+
 /** Notion API v5+ queries collections via data sources, not database_id. */
 let primaryDataSourceId: Promise<string> | null = null;
 

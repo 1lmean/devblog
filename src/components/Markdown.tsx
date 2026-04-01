@@ -3,6 +3,7 @@
 import type React from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
+import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 import { slugify } from "@/lib/toc";
 
@@ -110,7 +111,7 @@ export function Markdown({ content }: { content: string }) {
     <article className="markdown-content max-w-none">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
-        rehypePlugins={[[rehypeHighlight, { detect: false }]]}
+        rehypePlugins={[rehypeRaw, [rehypeHighlight, { detect: false }]]}
         components={components}
       >
         {content}
