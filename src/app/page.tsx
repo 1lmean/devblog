@@ -1,3 +1,5 @@
+import fs from "fs";
+import path from "path";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { PostCard } from "@/components/PostCard";
@@ -5,6 +7,7 @@ import { getAllPosts } from "@/lib/posts";
 
 export default async function Home() {
   const posts = await getAllPosts();
+  const bio = fs.readFileSync(path.join(process.cwd(), "content/bio.txt"), "utf-8").trim();
 
   return (
     <div className="flex flex-1 flex-col">
@@ -14,8 +17,8 @@ export default async function Home() {
           <h1 className="text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
             1lmean 🍓
           </h1>
-          <p className="mt-3 leading-relaxed text-zinc-600 dark:text-zinc-400">
-            개발하면서 배운 것들을 기록하는 블로그입니다.
+          <p className="mt-3 whitespace-pre-line leading-relaxed text-zinc-600 dark:text-zinc-400">
+            {bio}
           </p>
         </section>
 
@@ -54,7 +57,7 @@ export default async function Home() {
             Featured Projects
           </h1>
           <p className="mt-2 text-zinc-600 dark:text-zinc-400">
-            주요 프로젝트 목록입니다.
+            주요 프로젝트 데모입니다.
           </p>
           <ul className="flex space-x-8 mt-3">
             {/* <ProjectCard /> */}
