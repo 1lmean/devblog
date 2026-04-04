@@ -23,7 +23,7 @@ const siteUrl = getSiteUrl();
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "블로그",
+    default: "@1lmean",
     template: "%s · 블로그",
   },
   description: "Next.js로 만든 개인 블로그",
