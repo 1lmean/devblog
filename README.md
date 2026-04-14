@@ -1,36 +1,72 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 1lmean devblog
+
+개인 기술 블로그입니다.
+
+🔗 **[1lmeandevblog.vercel.app](https://1lmeandevblog.vercel.app/)**
+
+## Tech Stack
+
+- **Framework**: Next.js 16 (App Router)
+- **Language**: TypeScript 5
+- **Styling**: Tailwind CSS v4
+- **CMS**: Notion API (`@notionhq/client` v5)
+- **Markdown 변환**: `notion-to-md` + `react-markdown`
+- **Syntax Highlighting**: `rehype-highlight`
+- **Fonts**: Pretendard
+- **Deployment**: Vercel
+- **Package Manager**: pnpm
+
+## Features
+
+- Notion 데이터베이스 기반 포스트 관리
+- 태그 / 카테고리 분류 및 필터링
+- 다크모드 토글 (`next-themes`)
+- 반응형 디자인
+- 포스트 카드 형태 목록
+- 포스트 본문 목차(ToC) — 스크롤 위치에 따라 활성 항목 하이라이트
+- RSS 피드 (`/rss.xml`)
+- OG 이미지 자동 생성 (`next/og`)
+- 프로젝트 페이지 (`/projects`)
+
+## Project Structure
+
+```
+src/
+├── app/
+│   ├── posts/
+│   │   └── [slug]/       # 포스트 상세 페이지
+│   ├── projects/         # 프로젝트 목록 페이지
+│   ├── rss.xml/          # RSS 피드 라우트 핸들러
+│   ├── opengraph-image.tsx  # 사이트 OG 이미지
+│   └── layout.tsx        # 루트 레이아웃
+├── components/
+│   ├── SiteHeader.tsx    # 헤더 / 네비게이션
+│   ├── PostCard.tsx      # 포스트 카드
+│   ├── PostsFilter.tsx   # 태그·카테고리 필터
+│   ├── TableOfContents.tsx  # 목차 (IntersectionObserver)
+│   ├── Markdown.tsx      # 마크다운 렌더러
+│   ├── ThemeToggle.tsx   # 다크모드 토글
+│   └── TagLinks.tsx      # 태그 링크
+└── lib/
+    ├── posts.ts          # Notion API 연동 (포스트)
+    ├── projects.ts       # 프로젝트 데이터
+    ├── toc.ts            # 목차 파싱
+    ├── site.ts           # 사이트 URL 유틸
+    ├── xml.ts            # XML 이스케이프 유틸
+    └── format-date.ts    # 날짜 포맷 유틸
+```
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+환경변수 설정 (`.env.local`):
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+NOTION_API_KEY=your_api_key
+NOTION_DATABASE_ID=your_database_id
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+```
