@@ -4,6 +4,7 @@ import type React from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
 import rehypeRaw from "rehype-raw";
+import remarkBreaks from "remark-breaks";
 import remarkGfm from "remark-gfm";
 import { slugify } from "@/lib/toc";
 
@@ -21,7 +22,7 @@ const components: Components = {
   h1: ({ children, ...props }) => (
     <h1
       id={slugify(getHeadingText(children))}
-      className="mt-10 text-3xl font-bold tracking-tight text-foreground first:mt-0"
+      className="mt-16 text-3xl font-bold tracking-tight text-foreground first:mt-0"
       {...props}
     >
       {children}
@@ -30,7 +31,7 @@ const components: Components = {
   h2: ({ children, ...props }) => (
     <h2
       id={slugify(getHeadingText(children))}
-      className="mt-10 text-2xl font-semibold tracking-tight"
+      className="mt-12 text-2xl font-semibold tracking-tight"
       {...props}
     >
       {children}
@@ -39,7 +40,7 @@ const components: Components = {
   h3: ({ children, ...props }) => (
     <h3
       id={slugify(getHeadingText(children))}
-      className="mt-8 text-xl font-semibold tracking-tight"
+      className="mt-10 text-xl font-semibold tracking-tight"
       {...props}
     >
       {children}
@@ -110,7 +111,7 @@ export function Markdown({ content }: { content: string }) {
   return (
     <article className="markdown-content max-w-none">
       <ReactMarkdown
-        remarkPlugins={[remarkGfm]}
+        remarkPlugins={[remarkGfm, remarkBreaks]}
         rehypePlugins={[rehypeRaw, [rehypeHighlight, { detect: false }]]}
         components={components}
       >

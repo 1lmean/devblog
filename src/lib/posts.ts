@@ -49,7 +49,8 @@ function processRichText(richText: RichTextItem[]): string {
     let text = plain_text
       .replace(/&/g, "&amp;")
       .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;");
+      .replace(/>/g, "&gt;")
+      .replace(/\n/g, "<br>");
 
     if (annotations.code)          text = `<code>${text}</code>`;
     if (annotations.bold)          text = `<strong>${text}</strong>`;
