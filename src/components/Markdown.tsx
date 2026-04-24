@@ -19,29 +19,29 @@ function getHeadingText(children: React.ReactNode): string {
 }
 
 const components: Components = {
-  h1: ({ children, ...props }) => (
+  h1: ({ children, node: _node, ...props }) => (
     <h1
+      {...props}
       id={slugify(getHeadingText(children))}
       className="mt-16 text-3xl font-bold tracking-tight text-foreground first:mt-0"
-      {...props}
     >
       {children}
     </h1>
   ),
-  h2: ({ children, ...props }) => (
+  h2: ({ children, node: _node, ...props }) => (
     <h2
+      {...props}
       id={slugify(getHeadingText(children))}
       className="mt-12 text-2xl font-semibold tracking-tight"
-      {...props}
     >
       {children}
     </h2>
   ),
-  h3: ({ children, ...props }) => (
+  h3: ({ children, node: _node, ...props }) => (
     <h3
+      {...props}
       id={slugify(getHeadingText(children))}
       className="mt-10 text-xl font-semibold tracking-tight"
-      {...props}
     >
       {children}
     </h3>
@@ -109,7 +109,7 @@ const components: Components = {
 
 export function Markdown({ content }: { content: string }) {
   return (
-    <article className="markdown-content max-w-none">
+    <article className="markdown-content max-w-none overflow-hidden">
       <ReactMarkdown
         remarkPlugins={[remarkGfm, remarkBreaks]}
         rehypePlugins={[rehypeRaw, [rehypeHighlight, { detect: false }]]}
