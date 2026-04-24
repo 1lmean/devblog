@@ -416,6 +416,11 @@ refactor(home): extract hero section into server component
 스타일 커밋은 기능 커밋에 묻어넣지 않는다.
 디자인 손댄 날은 은근 로그가 제일 더럽혀진다.
 
+### rule 6
+커밋 메시지에 AI 협업 흔적을 남기지 않는다.
+`Co-Authored-By: Claude` 같은 트레일러는 넣지 않는다.
+로그는 내 이력이다.
+
 ---
 
 ## 추천 워크플로우
