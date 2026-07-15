@@ -5,7 +5,7 @@ import type { PostMeta } from "@/lib/posts";
 
 export function PostCard({ post }: { post: PostMeta }) {
   return (
-    <li className="w-1/4 rounded-lg bg-zinc-100 p-4 dark:bg-zinc-800">
+    <li className="w-56 shrink-0 rounded-lg bg-zinc-100 p-4 dark:bg-zinc-800">
       <Link
         href={`/posts/${post.slug}`}
         className="group block focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 dark:focus-visible:ring-zinc-600"

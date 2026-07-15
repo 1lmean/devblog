@@ -33,7 +33,7 @@ export default async function Home() {
           {posts.length === 0 ? (
             <p className="text-zinc-500 dark:text-zinc-400">아직 글이 없습니다.</p>
           ) : (
-            <ul className="flex space-x-8 mt-3">
+            <ul className="mt-3 flex gap-8 overflow-x-auto">
               {posts.slice(0, 4).map((post) => (
                 <PostCard key={post.slug} post={post} />
               ))}
@@ -59,7 +59,7 @@ export default async function Home() {
           <p className="mt-2 text-zinc-600 dark:text-zinc-400">
             주요 프로젝트 데모입니다.
           </p>
-          <ul className="flex space-x-8 mt-3">
+          <ul className="mt-3 flex gap-8">
             {/* <ProjectCard /> */}
           </ul>
         </section>
