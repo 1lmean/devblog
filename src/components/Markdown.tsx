@@ -8,6 +8,12 @@ import remarkBreaks from "remark-breaks";
 import remarkGfm from "remark-gfm";
 import { slugify } from "@/lib/toc";
 
+type MarkdownNode = {
+  type: string;
+  value?: string;
+  children?: MarkdownNode[];
+};
+
 function getHeadingText(children: React.ReactNode): string {
   if (typeof children === "string") return children;
   if (typeof children === "number") return String(children);
@@ -16,6 +22,58 @@ function getHeadingText(children: React.ReactNode): string {
     return getHeadingText((children.props as { children?: React.ReactNode }).children);
   }
   return "";
+}
+
+function recoverStrongFromText(value: string): MarkdownNode[] | null {
+  const strongPattern = /\*\*([^*\n]+?)\*\*/g;
+  const nodes: MarkdownNode[] = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = strongPattern.exec(value)) !== null) {
+    if (match.index > lastIndex) {
+      nodes.push({ type: "text", value: value.slice(lastIndex, match.index) });
+    }
+
+    nodes.push({
+      type: "strong",
+      children: [{ type: "text", value: match[1] }],
+    });
+    lastIndex = strongPattern.lastIndex;
+  }
+
+  if (nodes.length === 0) return null;
+  if (lastIndex < value.length) {
+    nodes.push({ type: "text", value: value.slice(lastIndex) });
+  }
+
+  return nodes;
+}
+
+function remarkRecoverStrongText() {
+  return (tree: MarkdownNode) => {
+    function visit(node: MarkdownNode) {
+      const children = node.children;
+      if (!children) return;
+
+      for (let index = 0; index < children.length; index += 1) {
+        const child = children[index];
+
+        if (child.type === "text" && child.value) {
+          const recoveredNodes = recoverStrongFromText(child.value);
+          if (recoveredNodes) {
+            children.splice(index, 1, ...recoveredNodes);
+            index += recoveredNodes.length - 1;
+          }
+          continue;
+        }
+
+        visit(child);
+      }
+    }
+
+    visit(tree);
+  };
 }
 
 const components: Components = {
@@ -111,7 +169,7 @@ export function Markdown({ content }: { content: string }) {
   return (
     <article className="markdown-content max-w-none overflow-hidden">
       <ReactMarkdown
-        remarkPlugins={[remarkGfm, remarkBreaks]}
+        remarkPlugins={[remarkGfm, remarkBreaks, remarkRecoverStrongText]}
         rehypePlugins={[rehypeRaw, [rehypeHighlight, { detect: false }]]}
         components={components}
       >
