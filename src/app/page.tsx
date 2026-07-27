@@ -3,7 +3,9 @@ import path from "path";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { PostCard } from "@/components/PostCard";
+import { ProjectCard } from "@/components/ProjectCard";
 import { getAllPosts } from "@/lib/posts";
+import { projects } from "@/lib/projects";
 
 export default async function Home() {
   const posts = await getAllPosts();
@@ -59,8 +61,10 @@ export default async function Home() {
           <p className="mt-2 text-zinc-600 dark:text-zinc-400">
             주요 프로젝트 데모입니다.
           </p>
-          <ul className="mt-3 flex gap-8">
-            {/* <ProjectCard /> */}
+          <ul className="mt-3 divide-y divide-zinc-200 dark:divide-zinc-800">
+            {projects.slice(0, 1).map((project) => (
+              <ProjectCard key={project.title} project={project} />
+            ))}
           </ul>
         </section>
       </main>

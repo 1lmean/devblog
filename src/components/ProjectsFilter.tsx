@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ExternalLink } from "lucide-react";
+import { ProjectCard } from "@/components/ProjectCard";
 import type { Project } from "@/lib/projects";
 
 type Props = {
@@ -18,7 +18,11 @@ export function ProjectsFilter({ projects, techs }: Props) {
   const toggleTech = (tech: string) => {
     setActiveTechs((prev) => {
       const next = new Set(prev);
-      next.has(tech) ? next.delete(tech) : next.add(tech);
+      if (next.has(tech)) {
+        next.delete(tech);
+      } else {
+        next.add(tech);
+      }
       return next;
     });
   };
@@ -89,55 +93,11 @@ export function ProjectsFilter({ projects, techs }: Props) {
         ) : (
           <ul className="mt-10 divide-y divide-zinc-200 dark:divide-zinc-800">
             {filtered.map((project) => (
-              <li key={project.title} className="py-6 first:pt-0">
-                <div className="flex items-start justify-between gap-4">
-                  <div className="min-w-0 flex-1">
-                    <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-                      {project.title}
-                    </h3>
-                    <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-                      {project.description}
-                    </p>
-                    {project.tech.length > 0 && (
-                      <div className="mt-3 flex flex-wrap gap-1.5">
-                        {project.tech.map((t) => (
-                          <button
-                            key={t}
-                            onClick={() => toggleTech(t)}
-                            className="inline-flex rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-medium text-zinc-700 transition-colors hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
-                          >
-                            {t}
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                  <div className="flex shrink-0 items-center gap-2">
-                    {project.github && (
-                      <a
-                        href={project.github}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-200 px-3 py-1.5 text-sm text-zinc-600 transition-colors hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-900"
-                      >
-                        {/* <Github className="h-3.5 w-3.5" /> */}
-                        GitHub
-                      </a>
-                    )}
-                    {project.url && (
-                      <a
-                        href={project.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-200 px-3 py-1.5 text-sm text-zinc-600 transition-colors hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-900"
-                      >
-                        <ExternalLink className="h-3.5 w-3.5" />
-                        Demo
-                      </a>
-                    )}
-                  </div>
-                </div>
-              </li>
+              <ProjectCard
+                key={project.title}
+                project={project}
+                onTechClick={toggleTech}
+              />
             ))}
           </ul>
         )}
