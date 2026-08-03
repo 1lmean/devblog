@@ -43,6 +43,7 @@ export const projects: Project[] = [
     ],
     tech: ["Next.js", "TypeScript", "RAG", "Gemini"],
     url: "https://hmcpt.vercel.app/",
+    github: "https://github.com/1lmean/hmcpt",
   },
 ];
 

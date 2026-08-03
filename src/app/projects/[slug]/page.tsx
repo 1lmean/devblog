@@ -21,7 +21,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 
   const url = `${getSiteUrl()}/projects/${project.slug}`;
   return {
-    title: project.title,
+    title: { absolute: `${project.title} · 프로젝트` },
     description: project.description,
     openGraph: {
       title: project.title,
@@ -70,17 +70,30 @@ export default async function ProjectDetailPage(props: Props) {
                 </p>
               </div>
 
-              {project.url ? (
-                <a
-                  href={project.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-zinc-200 px-3 py-1.5 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-900"
-                >
-                  <ExternalLink className="h-3.5 w-3.5" />
-                  프로젝트 열기
-                </a>
-              ) : null}
+              <div className="flex shrink-0 flex-wrap gap-2">
+                {project.url ? (
+                  <a
+                    href={project.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-200 px-3 py-1.5 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-900"
+                  >
+                    <ExternalLink className="h-3.5 w-3.5" />
+                    프로젝트 열기
+                  </a>
+                ) : null}
+                {project.github ? (
+                  <a
+                    href={project.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-200 px-3 py-1.5 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-900"
+                  >
+                    <ExternalLink className="h-3.5 w-3.5" />
+                    github 열기
+                  </a>
+                ) : null}
+              </div>
             </div>
 
             {project.tech.length > 0 ? (
