@@ -31,6 +31,8 @@ export function TableOfContents({ items }: { items: TocItem[] }) {
 
   if (items.length === 0) return null;
 
+  const baseLevel = Math.min(...items.map((item) => item.level));
+
   return (
     <nav aria-label="목차">
       <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
@@ -40,13 +42,13 @@ export function TableOfContents({ items }: { items: TocItem[] }) {
         {items.map((item) => (
           <li
             key={item.id}
-            style={{ paddingLeft: `${(item.level - 2) * 12}px` }}
+            style={{ paddingLeft: `${(item.level - baseLevel) * 12}px` }}
           >
             <a
               href={`#${item.id}`}
               className={[
                 "block text-sm leading-snug transition-colors",
-                item.level === 2
+                item.level === baseLevel
                   ? "font-medium"
                   : "font-normal",
                 activeId === item.id
