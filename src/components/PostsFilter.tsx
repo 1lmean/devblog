@@ -61,7 +61,7 @@ export function PostsFilter({ categories, tags, posts }: Props) {
             value={searchQuery}
             onChange={(event) => setSearchQuery(event.target.value)}
             placeholder="제목, 설명, 본문 검색"
-            className="h-11 w-full rounded-md border border-zinc-200 bg-white px-10 text-sm text-zinc-900 outline-none transition-colors placeholder:text-zinc-400 focus:border-zinc-400 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50 dark:placeholder:text-zinc-500 dark:focus:border-zinc-600"
+            className="h-11 w-full rounded-md border border-zinc-200 bg-white px-10 text-sm text-zinc-900 outline-none transition-colors placeholder:text-zinc-400 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50 dark:placeholder:text-zinc-500 dark:hover:bg-zinc-900"
           />
           {searchQuery && (
             <button
