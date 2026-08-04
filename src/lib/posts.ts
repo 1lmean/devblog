@@ -1,5 +1,6 @@
 import { Client, isFullPage, type PageObjectResponse } from "@notionhq/client";
 import { NotionToMarkdown } from "notion-to-md";
+import { markdownToSearchText } from "@/lib/post-search";
 
 /** Property shapes we read from the Notion data source (names must match the DB). */
 type BlogDbProperties = {
@@ -124,9 +125,11 @@ export type PostMeta = {
   category?: string;
 };
 
+export type SearchablePostMeta = PostMeta & { searchText: string };
+
 export type Post = PostMeta & { content: string };
 
-export async function getAllPosts(): Promise<PostMeta[]> {
+async function getPublishedPostPages() {
   const data_source_id = await getPrimaryDataSourceId();
   const response = await notion.dataSources.query({
     data_source_id,
@@ -135,17 +138,41 @@ export async function getAllPosts(): Promise<PostMeta[]> {
     sorts: [{ property: "Date", direction: "descending" }],
   });
 
-  return response.results.filter(isFullPage).map((page) => {
-    const props = propsAsBlog(page);
-    return {
-      slug: props.Slug?.rich_text?.[0]?.plain_text ?? page.id,
-      title: props.Title?.title?.[0]?.plain_text ?? "",
-      date: props.Date?.date?.start ?? "",
-      description: props.Description?.rich_text?.[0]?.plain_text,
-      tags: props.Tags?.multi_select?.map((t) => t.name) ?? [],
-      category: props.Category?.select?.name,
-    };
-  });
+  return response.results.filter(isFullPage);
+}
+
+function pageToPostMeta(page: PageObjectResponse): PostMeta {
+  const props = propsAsBlog(page);
+  return {
+    slug: props.Slug?.rich_text?.[0]?.plain_text ?? page.id,
+    title: props.Title?.title?.[0]?.plain_text ?? "",
+    date: props.Date?.date?.start ?? "",
+    description: props.Description?.rich_text?.[0]?.plain_text,
+    tags: props.Tags?.multi_select?.map((t) => t.name) ?? [],
+    category: props.Category?.select?.name,
+  };
+}
+
+export async function getAllPosts(): Promise<PostMeta[]> {
+  const pages = await getPublishedPostPages();
+  return pages.map(pageToPostMeta);
+}
+
+export async function getSearchablePosts(): Promise<SearchablePostMeta[]> {
+  const pages = await getPublishedPostPages();
+
+  return Promise.all(
+    pages.map(async (page) => {
+      const meta = pageToPostMeta(page);
+      const mdBlocks = await n2m.pageToMarkdown(page.id);
+      const content = n2m.toMarkdownString(mdBlocks).parent;
+
+      return {
+        ...meta,
+        searchText: markdownToSearchText(content),
+      };
+    }),
+  );
 }
 
 export async function getPostBySlug(slug: string): Promise<Post | null> {
@@ -161,15 +188,10 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
 
   const mdBlocks = await n2m.pageToMarkdown(page.id);
   const content = n2m.toMarkdownString(mdBlocks).parent;
-  const props = propsAsBlog(page);
 
   return {
+    ...pageToPostMeta(page),
     slug,
-    title: props.Title?.title?.[0]?.plain_text ?? "",
-    date: props.Date?.date?.start ?? "",
-    description: props.Description?.rich_text?.[0]?.plain_text,
-    tags: props.Tags?.multi_select?.map((t) => t.name) ?? [],
-    category: props.Category?.select?.name,
     content,
   };
 }
@@ -187,4 +209,3 @@ export async function getAllCategories(): Promise<string[]> {
   posts.forEach((p) => { if (p.category) seen.add(p.category); });
   return [...seen].sort((a, b) => a.localeCompare(b, "ko"));
 }
-

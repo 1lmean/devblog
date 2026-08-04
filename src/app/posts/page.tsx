@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { PostsFilter } from "@/components/PostsFilter";
-import { getAllPosts, getAllTags, getAllCategories } from "@/lib/posts";
+import { getSearchablePosts } from "@/lib/posts";
 
 export const metadata: Metadata = {
   title: "글 목록",
@@ -8,11 +8,11 @@ export const metadata: Metadata = {
 };
 
 export default async function Posts() {
-  const [categories, tags, posts] = await Promise.all([
-    getAllCategories(),
-    getAllTags(),
-    getAllPosts(),
-  ]);
+  const posts = await getSearchablePosts();
+  const categories = [...new Set(posts.flatMap((post) => post.category ? [post.category] : []))]
+    .sort((a, b) => a.localeCompare(b, "ko"));
+  const tags = [...new Set(posts.flatMap((post) => post.tags))]
+    .sort((a, b) => a.localeCompare(b, "ko"));
 
   return (
     <div className="flex flex-1 flex-col">
