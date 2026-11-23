@@ -4,9 +4,9 @@ export function PostBackButton() {
   return (
     <Link
       href="/posts"
-      className="text-sm text-zinc-500 transition-colors hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200"
+      className="text-[11px] font-medium uppercase tracking-[0.12em] text-accent transition-opacity hover:opacity-60"
     >
-      ← 글 목록
+      ← Blog
     </Link>
   );
 }

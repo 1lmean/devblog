@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import { SiteHeader } from "@/components/SiteHeader";
+import { SiteFooter } from "@/components/SiteFooter";
 import { Providers } from "@/app/providers";
 import { getSiteUrl } from "@/lib/site";
 import "./globals.css";
@@ -57,11 +58,7 @@ export default function RootLayout({
         <Providers>
           <SiteHeader />
           {children}
-          <footer className="mt-auto border-t border-zinc-200 dark:border-zinc-800">
-            <div className="page-shell py-10 text-center text-sm text-zinc-500 dark:text-zinc-400">
-              © {new Date().getFullYear()}
-            </div>
-          </footer>
+          <SiteFooter />
         </Providers>
       </body>
     </html>
