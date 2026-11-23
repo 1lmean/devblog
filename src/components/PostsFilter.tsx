@@ -108,7 +108,7 @@ export function PostsFilter({ categories, tags, posts }: Props) {
                   className={toggleClass(activeCategory === cat)}
                 >
                   {cat}
-                  <span className="font-mono text-[10px] opacity-60">{countForCategory(cat)}</span>
+                  <span className="tabular-nums text-[10px] opacity-60">{countForCategory(cat)}</span>
                 </button>
               ))}
             </div>
@@ -129,7 +129,7 @@ export function PostsFilter({ categories, tags, posts }: Props) {
               {tags.map((tag) => (
                 <button key={tag} onClick={() => toggleTag(tag)} className={toggleClass(activeTags.has(tag))}>
                   #{tag}
-                  <span className="font-mono text-[10px] opacity-60">{countForTag(tag)}</span>
+                  <span className="tabular-nums text-[10px] opacity-60">{countForTag(tag)}</span>
                 </button>
               ))}
             </div>
@@ -140,7 +140,7 @@ export function PostsFilter({ categories, tags, posts }: Props) {
       <section className="mt-20 pb-16">
         <div className="flex items-baseline gap-3 border-b border-line pb-4">
           <h2 className={sectionTitle}>Posts</h2>
-          <span className="font-mono text-xs text-muted">
+          <span className="tabular-nums text-xs text-muted">
             ({hasActiveFilter ? filtered.length : posts.length})
           </span>
         </div>

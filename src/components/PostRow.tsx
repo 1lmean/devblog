@@ -18,14 +18,14 @@ export function PostRow({ post, onTagClick, activeTags }: Props) {
     <li className="grid grid-cols-[4.5rem_1fr] gap-x-4 border-b border-line py-6 sm:grid-cols-[7rem_7rem_1fr] sm:gap-x-6">
       <div className="text-[11px] leading-6 tracking-wide text-muted sm:pt-0.5">
         <span className="block uppercase">{post.category ?? "Note"}</span>
-        <time dateTime={post.date} className="block font-mono sm:hidden">
+        <time dateTime={post.date} className="block tabular-nums sm:hidden">
           {formatDotDate(post.date)}
         </time>
       </div>
 
       <time
         dateTime={post.date}
-        className="hidden pt-0.5 font-mono text-[11px] leading-6 text-muted sm:block"
+        className="hidden pt-0.5 tabular-nums text-[11px] leading-6 text-muted sm:block"
       >
         {formatDotDate(post.date)}
       </time>
