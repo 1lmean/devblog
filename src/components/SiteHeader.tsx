@@ -13,7 +13,7 @@ export function SiteHeader() {
           aria-label="홈"
           className="justify-self-start text-sm font-medium tracking-tight text-foreground"
         >
-          1lmean🍓/
+          1lmean/
         </Link>
 
         <nav className="flex items-center gap-5 sm:gap-8">

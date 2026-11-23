@@ -30,14 +30,14 @@ export default async function Home() {
       <main className="page-shell flex-1 pb-28">
         {/* 히어로 — 대형 라이트 타이틀 + 헤어라인 */}
         <section className="pt-20 sm:pt-28">
-          <h1 className="border-b border-line pb-1 text-[4.5rem] font-light leading-[0.95] tracking-[-0.055em] text-foreground sm:text-[8.5rem] md:text-[10rem]">
-            1lmean
+          <h1 className="border-b border-line pb-[0.22em] text-[4.5rem] font-light leading-[0.95] tracking-[-0.055em] text-foreground sm:text-[8.5rem] md:text-[10rem]">
+            dig in
           </h1>
           <p className="mt-3 text-2xl font-light tracking-tight text-foreground sm:text-3xl">
-            learn by doing.
+            the hard way.
           </p>
           <p className="mt-3 text-[11px] leading-5 text-muted">
-            Notes on Frontend &amp; Machine Learning
+            Using AI as a tool — never as the point.
           </p>
         </section>
 
