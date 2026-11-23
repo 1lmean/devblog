@@ -1,69 +1,167 @@
 import fs from "fs";
 import path from "path";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
-import { PostCard } from "@/components/PostCard";
-import { ProjectCard } from "@/components/ProjectCard";
+import { ArrowDownRight, ArrowUpRight } from "lucide-react";
+import { PostRow } from "@/components/PostRow";
 import { getAllPosts } from "@/lib/posts";
 import { projects } from "@/lib/projects";
+
+const RECENT_COUNT = 5;
 
 export default async function Home() {
   const posts = await getAllPosts();
   const bio = fs.readFileSync(path.join(process.cwd(), "content/bio.txt"), "utf-8").trim();
 
+  const categoryCounts = Object.entries(
+    posts.reduce<Record<string, number>>((acc, post) => {
+      if (post.category) acc[post.category] = (acc[post.category] ?? 0) + 1;
+      return acc;
+    }, {}),
+  ).sort(([a], [b]) => a.localeCompare(b, "ko"));
+
+  const indexLinks = [
+    { href: "/posts", label: ["All", "Posts"], count: posts.length },
+    { href: "/projects", label: ["Featured", "Projects"], count: projects.length },
+    { href: "/rss.xml", label: ["RSS", "Feed"], external: true },
+  ];
+
   return (
     <div className="flex flex-1 flex-col">
-      <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-12">
-        {/* 소개 */}
-        <section className="mb-16">
-          <h1 className="text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
-            1lmean 🍓
+      <main className="page-shell flex-1 pb-28">
+        {/* 히어로 — 대형 라이트 타이틀 + 헤어라인 */}
+        <section className="pt-20 sm:pt-28">
+          <h1 className="border-b border-line pb-1 text-[4.5rem] font-light leading-[0.95] tracking-[-0.055em] text-foreground sm:text-[8.5rem] md:text-[10rem]">
+            1lmean
           </h1>
-          <p className="mt-3 whitespace-pre-line leading-relaxed text-zinc-600 dark:text-zinc-400">
+          <p className="mt-3 text-2xl font-light tracking-tight text-foreground sm:text-3xl">
+            learn by doing.
+          </p>
+          <p className="mt-3 text-[11px] leading-5 text-muted">
+            Notes on Frontend &amp; Machine Learning
+          </p>
+        </section>
+
+        {/* 소개 — 왼쪽 작은 인덱스, 오른쪽 정렬 바이오 */}
+        <section className="mt-24 grid gap-10 sm:mt-32 sm:grid-cols-2">
+          <dl className="order-2 grid w-fit grid-cols-[auto_auto] gap-x-6 gap-y-1 font-mono text-[11px] leading-5 text-muted sm:order-1 sm:self-end">
+            {categoryCounts.map(([category, count]) => (
+              <div key={category} className="contents">
+                <dt className="uppercase">{category}</dt>
+                <dd>{String(count).padStart(2, "0")}</dd>
+              </div>
+            ))}
+            <dt>TOTAL</dt>
+            <dd>{String(posts.length).padStart(2, "0")}</dd>
+          </dl>
+          <p className="order-1 max-w-md whitespace-pre-line break-keep text-sm leading-7 text-foreground sm:order-2 sm:ml-auto sm:text-right">
             {bio}
           </p>
         </section>
 
-        {/* 최근 글 */}
-        <section className="mb-16">
-          <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
-            Recent Posts
-          </h1>
-          <p className="mt-3 leading-relaxed text-zinc-600 dark:text-zinc-400">
-            개발하면서 배우거나 공부한 내용들을 기록합니다. 
-          </p>
+        {/* 인덱스 내비 — ↘ 화살표 링크 */}
+        <nav className="mt-24 flex flex-wrap gap-x-12 gap-y-8 sm:mt-28 sm:justify-center sm:gap-x-20">
+          {indexLinks.map((item) => {
+            const className =
+              "group flex items-start gap-2 text-xl font-light leading-[1.1] tracking-tight text-foreground sm:text-2xl";
+            const content = (
+              <>
+                {item.external ? (
+                  <ArrowUpRight className="mt-0.5 h-4 w-4 shrink-0 text-muted transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" strokeWidth={1.5} />
+                ) : (
+                  <ArrowDownRight className="mt-0.5 h-4 w-4 shrink-0 text-muted transition-transform group-hover:translate-x-0.5 group-hover:translate-y-0.5" strokeWidth={1.5} />
+                )}
+                <span>
+                  {item.label.map((word) => (
+                    <span key={word} className="block">
+                      {word}
+                    </span>
+                  ))}
+                  {item.count !== undefined ? (
+                    <span className="block text-muted">({item.count})</span>
+                  ) : null}
+                </span>
+              </>
+            );
+            return item.external ? (
+              <a key={item.href} href={item.href} className={className}>
+                {content}
+              </a>
+            ) : (
+              <Link key={item.href} href={item.href} className={className}>
+                {content}
+              </Link>
+            );
+          })}
+        </nav>
+
+        {/* 최근 글 — 뉴스 리스트 */}
+        <section className="mt-28 sm:mt-36">
+          <div className="flex items-baseline justify-between border-b border-line pb-4">
+            <h2 className="text-xl font-normal tracking-tight text-foreground">Recent Posts</h2>
+            <p className="hidden text-xs text-muted sm:block">
+              개발하면서 배우거나 공부한 내용들을 기록합니다.
+            </p>
+          </div>
+
           {posts.length === 0 ? (
-            <p className="text-zinc-500 dark:text-zinc-400">아직 글이 없습니다.</p>
+            <p className="py-8 text-sm text-muted">아직 글이 없습니다.</p>
           ) : (
-            <ul className="mt-3 flex gap-8 overflow-x-auto">
-              {posts.slice(0, 4).map((post) => (
-                <PostCard key={post.slug} post={post} />
+            <ul>
+              {posts.slice(0, RECENT_COUNT).map((post) => (
+                <PostRow key={post.slug} post={post} />
               ))}
             </ul>
           )}
 
-          {posts.length > 4 ? (
+          {posts.length > RECENT_COUNT ? (
             <Link
               href="/posts"
-              className="mt-4 inline-flex items-center gap-1 text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+              className="mt-6 inline-flex items-center gap-1 text-[11px] font-medium uppercase tracking-[0.12em] text-accent transition-opacity hover:opacity-60 sm:ml-[17rem]"
             >
-              모든 글 보기
-              <ArrowRight className="h-3.5 w-3.5" />
+              <ArrowDownRight className="h-3.5 w-3.5" strokeWidth={1.5} />
+              View all posts
             </Link>
           ) : null}
         </section>
 
-        {/*  주요 프로젝트 */}
-        <section className="mb-16">
-          <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
-            Featured Projects
-          </h1>
-          <p className="mt-2 text-zinc-600 dark:text-zinc-400">
-            주요 프로젝트 데모입니다.
-          </p>
-          <ul className="mt-3 divide-y divide-zinc-200 dark:divide-zinc-800">
-            {projects.slice(0, 1).map((project) => (
-              <ProjectCard key={project.title} project={project} />
+        {/* 주요 프로젝트 — 텍스트 행 */}
+        <section className="mt-28">
+          <div className="border-b border-line pb-4">
+            <h2 className="text-xl font-normal tracking-tight text-foreground">Featured Projects</h2>
+          </div>
+          <ul>
+            {projects.slice(0, 1).map((project, index) => (
+              <li
+                key={project.slug}
+                className="grid grid-cols-[4.5rem_1fr] gap-x-4 border-b border-line py-6 sm:grid-cols-[7rem_7rem_1fr] sm:gap-x-6"
+              >
+                <span className="font-mono text-[11px] leading-7 text-muted">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <span className="hidden text-[11px] leading-7 text-muted sm:block">
+                  {project.tech.slice(0, 2).join(" · ")}
+                </span>
+                <div className="min-w-0">
+                  <Link
+                    href={`/projects/${project.slug}`}
+                    className="text-base leading-7 text-foreground hover:underline hover:decoration-1 hover:underline-offset-4 sm:text-lg"
+                  >
+                    {project.title}
+                  </Link>
+                  <p className="mt-1 text-sm leading-6 text-muted">{project.description}</p>
+                  {project.url ? (
+                    <a
+                      href={project.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-2 inline-flex items-center gap-1 text-[10px] font-medium uppercase tracking-[0.12em] text-accent transition-opacity hover:opacity-60"
+                    >
+                      <ArrowUpRight className="h-3 w-3" strokeWidth={1.5} />
+                      Live demo
+                    </a>
+                  ) : null}
+                </div>
+              </li>
             ))}
           </ul>
         </section>

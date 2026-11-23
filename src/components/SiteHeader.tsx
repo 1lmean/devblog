@@ -1,34 +1,40 @@
-import { Sparkles } from "lucide-react";
+import Link from "next/link";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { NavButton } from "@/components/NavButton";
+
+const navClass =
+  "text-[11px] font-medium uppercase tracking-[0.14em] text-accent transition-opacity hover:opacity-60";
 
 export function SiteHeader() {
   return (
-    <header className="border-b border-zinc-200 bg-white/80 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/80">
-      <div className="mx-auto flex h-14 max-w-5xl items-center justify-between gap-4 px-6">
-        <nav className="flex items-center gap-2 text-sm">
-          <NavButton href="/" className="h-9 w-9" aria-label="홈">
-            <Sparkles className="h-4 w-4" />
-          </NavButton>
-          <NavButton href="/posts" className="h-9 px-3">
-            블로그
-          </NavButton>
-          {/* <NavButton href="/tags" className="h-9 px-3">
-            태그
-          </NavButton>
-          <NavButton href="/categories" className="h-9 px-3">
-            카테고리
-          </NavButton> */}
-          <NavButton href="/projects" className="h-9 px-3">
-            프로젝트
-          </NavButton>
+    <header id="top">
+      <div className="page-shell grid h-14 grid-cols-[1fr_auto_1fr] items-center gap-4">
+        <Link
+          href="/"
+          aria-label="홈"
+          className="justify-self-start text-sm font-medium tracking-tight text-foreground"
+        >
+          1lmean🍓/
+        </Link>
+
+        <nav className="flex items-center gap-5 sm:gap-8">
+          <Link href="/posts" className={navClass}>
+            Blog
+          </Link>
+          <Link href="/projects" className={navClass}>
+            Projects
+          </Link>
         </nav>
-        <nav className="flex items-center gap-2 text-sm">
-          <NavButton as="a" href="/rss.xml" className="h-9 px-3" title="RSS 피드">
+
+        <div className="flex items-center gap-3 justify-self-end">
+          <a
+            href="/rss.xml"
+            title="RSS 피드"
+            className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted transition-colors hover:text-foreground"
+          >
             RSS
-          </NavButton>
+          </a>
           <ThemeToggle />
-        </nav>
+        </div>
       </div>
     </header>
   );

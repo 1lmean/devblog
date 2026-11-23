@@ -4,7 +4,7 @@ import { PostBackButton } from "@/components/PostBackButton";
 import { Markdown } from "@/components/Markdown";
 import { PostMetaLine } from "@/components/TagLinks";
 import { TableOfContents } from "@/components/TableOfContents";
-import { formatPostDate } from "@/lib/format-date";
+import { formatDotDate } from "@/lib/format-date";
 import { getSiteUrl } from "@/lib/site";
 import { extractToc } from "@/lib/toc";
 import { getAllPosts, getPostBySlug } from "@/lib/posts";
@@ -47,26 +47,24 @@ export default async function PostPage(props: Props) {
 
   return (
     <div className="flex flex-1 flex-col">
-      <div className="mx-auto w-full max-w-5xl flex-1 px-6 py-12">
+      <div className="page-shell flex-1 py-12">
         <div className="flex gap-16">
           <article className="min-w-0 flex-1">
             <PostBackButton />
-            <header className="mt-15 border-b border-zinc-200 pb-8 dark:border-zinc-800">
-              <time
-                dateTime={post.date}
-                className="block text-sm text-zinc-500 dark:text-zinc-400"
-              >
-                {formatPostDate(post.date)}
-              </time>
-              <h1 className="mt-5 text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+            <header className="mt-16 sm:mt-24">
+              <div className="flex items-baseline gap-4 font-mono text-[11px] text-muted">
+                {post.category ? <span className="uppercase">{post.category}</span> : null}
+                <time dateTime={post.date}>{formatDotDate(post.date)}</time>
+              </div>
+              <h1 className="mt-4 border-b border-line pb-3 text-4xl font-light leading-[1.15] tracking-[-0.03em] text-foreground sm:text-6xl">
                 {post.title}
               </h1>
               {post.description ? (
-                <p className="mt-2 text-m text-zinc-600 dark:text-zinc-400">{post.description}</p>
+                <p className="mt-4 text-lg font-light leading-8 text-foreground/80">{post.description}</p>
               ) : null}
               <PostMetaLine post={post} />
             </header>
-            <div className="pt-10 pb-80">
+            <div className="pt-14 pb-40">
               <Markdown content={post.content} />
             </div>
           </article>

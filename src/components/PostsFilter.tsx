@@ -1,10 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { Search, X } from "lucide-react";
 import type { SearchablePostMeta } from "@/lib/posts";
-import { formatPostDate } from "@/lib/format-date";
+import { PostRow } from "@/components/PostRow";
 import { filterPostsByQuery, shouldShowTaxonomyFilters } from "@/lib/post-search";
 
 type Props = {
@@ -44,24 +43,35 @@ export function PostsFilter({ categories, tags, posts }: Props) {
   const hasActiveFilter = Boolean(activeCategory || activeTags.size > 0 || searchQuery.trim());
   const showTaxonomyFilters = shouldShowTaxonomyFilters(searchQuery);
 
+  const sectionTitle = "text-xl font-normal tracking-tight text-foreground";
+  const resetButton =
+    "text-[10px] font-medium uppercase tracking-[0.12em] text-accent transition-opacity hover:opacity-60";
+  const toggleClass = (active: boolean) =>
+    [
+      "inline-flex items-baseline gap-1.5 rounded-full border px-3 py-1 text-xs transition-colors",
+      active
+        ? "border-foreground bg-foreground text-background"
+        : "border-line text-foreground hover:border-foreground",
+    ].join(" ");
+
   return (
     <>
-      <section className="mb-12">
-        <label
-          htmlFor="post-search"
-          className="mb-3 block text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50"
-        >
-          검색
-        </label>
-        <div className="relative">
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400 dark:text-zinc-500" />
+      <section className="pt-8 sm:pt-12">
+        <h1 className="border-b border-line pb-1 text-6xl font-light leading-none tracking-[-0.05em] text-foreground sm:text-8xl">
+          blog
+        </h1>
+        <div className="relative mt-10">
+          <label htmlFor="post-search" className="sr-only">
+            검색
+          </label>
+          <Search className="pointer-events-none absolute left-0 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" strokeWidth={1.5} />
           <input
             id="post-search"
             type="text"
             value={searchQuery}
             onChange={(event) => setSearchQuery(event.target.value)}
             placeholder="제목, 설명, 본문 검색"
-            className="h-11 w-full rounded-md border border-zinc-200 bg-white px-10 text-sm text-zinc-900 outline-none transition-colors placeholder:text-zinc-400 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50 dark:placeholder:text-zinc-500 dark:hover:bg-zinc-900"
+            className="h-12 w-full border-b border-line bg-transparent pl-7 pr-9 text-sm text-foreground outline-none transition-colors placeholder:text-muted focus:border-foreground"
           />
           {searchQuery && (
             <button
@@ -69,150 +79,79 @@ export function PostsFilter({ categories, tags, posts }: Props) {
               onClick={() => setSearchQuery("")}
               aria-label="검색어 지우기"
               title="검색어 지우기"
-              className="absolute right-2 top-1/2 inline-flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-md text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-700 dark:hover:bg-zinc-800 dark:hover:text-zinc-200"
+              className="absolute right-0 top-1/2 inline-flex h-7 w-7 -translate-y-1/2 items-center justify-center text-muted transition-colors hover:text-foreground"
             >
-              <X className="h-4 w-4" />
+              <X className="h-4 w-4" strokeWidth={1.5} />
             </button>
           )}
         </div>
       </section>
 
       {showTaxonomyFilters && (
-        <>
-          <section className="mb-16">
-            <div className="flex items-center gap-3">
-              <h2 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
-                카테고리
-              </h2>
-              {activeCategory && (
-                <button
-                  onClick={() => setActiveCategory(null)}
-                  className="text-xs text-zinc-400 transition-colors hover:text-zinc-700 dark:hover:text-zinc-200"
-                >
-                  초기화
-                </button>
-              )}
-            </div>
-            {categories.length === 0 ? (
-              <p className="mt-6 text-zinc-500 dark:text-zinc-400">등록된 카테고리가 없습니다.</p>
-            ) : (
-              <div className="mt-6 flex flex-wrap gap-2">
-                {categories.map((cat) => (
-                  <button
-                    key={cat}
-                    onClick={() => setActiveCategory(activeCategory === cat ? null : cat)}
-                    className={[
-                      "inline-flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-sm font-medium transition-colors",
-                      activeCategory === cat
-                        ? "border-zinc-800 bg-zinc-800 text-zinc-50 dark:border-zinc-200 dark:bg-zinc-200 dark:text-zinc-900"
-                        : "border-zinc-200 text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-900",
-                    ].join(" ")}
-                  >
-                    {cat}
-                    <span className="text-xs text-zinc-400 dark:text-zinc-500">
-                      {countForCategory(cat)}
-                    </span>
-                  </button>
-                ))}
-              </div>
+        <section className="mt-12 grid gap-x-8 gap-y-6 sm:grid-cols-[15rem_1fr]">
+          <div className="flex items-baseline gap-3 sm:block">
+            <h2 className="text-[11px] uppercase tracking-wide text-muted">Category</h2>
+            {activeCategory && (
+              <button onClick={() => setActiveCategory(null)} className={`${resetButton} sm:mt-1`}>
+                Reset
+              </button>
             )}
-          </section>
+          </div>
+          {categories.length === 0 ? (
+            <p className="text-sm text-muted">등록된 카테고리가 없습니다.</p>
+          ) : (
+            <div className="flex flex-wrap gap-2">
+              {categories.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setActiveCategory(activeCategory === cat ? null : cat)}
+                  className={toggleClass(activeCategory === cat)}
+                >
+                  {cat}
+                  <span className="font-mono text-[10px] opacity-60">{countForCategory(cat)}</span>
+                </button>
+              ))}
+            </div>
+          )}
 
-          <section className="mb-16">
-            <div className="flex items-center gap-3">
-              <h2 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
-                태그
-              </h2>
-              {activeTags.size > 0 && (
-                <button
-                  onClick={() => setActiveTags(new Set())}
-                  className="text-xs text-zinc-400 transition-colors hover:text-zinc-700 dark:hover:text-zinc-200"
-                >
-                  초기화
-                </button>
-              )}
-            </div>
-            {tags.length === 0 ? (
-              <p className="mt-6 text-zinc-500 dark:text-zinc-400">등록된 태그가 없습니다.</p>
-            ) : (
-              <div className="mt-6 flex flex-wrap gap-2">
-                {tags.map((tag) => (
-                  <button
-                    key={tag}
-                    onClick={() => toggleTag(tag)}
-                    className={[
-                      "inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium transition-colors",
-                      activeTags.has(tag)
-                        ? "bg-zinc-800 text-zinc-50 dark:bg-zinc-200 dark:text-zinc-900"
-                        : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700",
-                    ].join(" ")}
-                  >
-                    #{tag}
-                    <span className="text-xs text-zinc-500 dark:text-zinc-400">
-                      {countForTag(tag)}
-                    </span>
-                  </button>
-                ))}
-              </div>
+          <div className="flex items-baseline gap-3 sm:block">
+            <h2 className="text-[11px] uppercase tracking-wide text-muted">Tags</h2>
+            {activeTags.size > 0 && (
+              <button onClick={() => setActiveTags(new Set())} className={`${resetButton} sm:mt-1`}>
+                Reset
+              </button>
             )}
-          </section>
-        </>
+          </div>
+          {tags.length === 0 ? (
+            <p className="text-sm text-muted">등록된 태그가 없습니다.</p>
+          ) : (
+            <div className="flex flex-wrap gap-2">
+              {tags.map((tag) => (
+                <button key={tag} onClick={() => toggleTag(tag)} className={toggleClass(activeTags.has(tag))}>
+                  #{tag}
+                  <span className="font-mono text-[10px] opacity-60">{countForTag(tag)}</span>
+                </button>
+              ))}
+            </div>
+          )}
+        </section>
       )}
 
-      <section className="mb-12">
-        <div className="flex items-baseline gap-3">
-          <h2 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
-            글 목록
-          </h2>
-          {hasActiveFilter && (
-            <span className="text-sm text-zinc-500 dark:text-zinc-400">
-              {filtered.length}개
-            </span>
-          )}
+      <section className="mt-20 pb-16">
+        <div className="flex items-baseline gap-3 border-b border-line pb-4">
+          <h2 className={sectionTitle}>Posts</h2>
+          <span className="font-mono text-xs text-muted">
+            ({hasActiveFilter ? filtered.length : posts.length})
+          </span>
         </div>
         {filtered.length === 0 ? (
-          <p className="mt-8 text-zinc-500 dark:text-zinc-400">
-            {hasActiveFilter
-              ? "조건에 맞는 글이 없습니다."
-              : "아직 글이 없습니다."}
+          <p className="py-8 text-sm text-muted">
+            {hasActiveFilter ? "조건에 맞는 글이 없습니다." : "아직 글이 없습니다."}
           </p>
         ) : (
-          <ul className="mt-10 divide-y divide-zinc-200 dark:divide-zinc-800">
+          <ul>
             {filtered.map((post) => (
-              <li key={post.slug} className="py-6 first:pt-0">
-                <Link
-                  href={`/posts/${post.slug}`}
-                  className="group block focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 dark:focus-visible:ring-zinc-600"
-                >
-                  <h3 className="text-lg font-semibold text-zinc-900 group-hover:underline dark:text-zinc-50">
-                    {post.title}
-                  </h3>
-                  <time
-                    dateTime={post.date}
-                    className="mt-1 block text-sm text-zinc-500 dark:text-zinc-400"
-                  >
-                    {formatPostDate(post.date)}
-                  </time>
-                  {post.description && (
-                    <p className="mt-2 line-clamp-2 text-sm text-zinc-600 dark:text-zinc-400">
-                      {post.description}
-                    </p>
-                  )}
-                </Link>
-                {post.tags.length > 0 && (
-                  <div className="mt-3 flex flex-wrap gap-1.5">
-                    {post.tags.map((tag) => (
-                      <button
-                        key={tag}
-                        onClick={() => toggleTag(tag)}
-                        className="inline-flex rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-medium text-zinc-700 transition-colors hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
-                      >
-                        #{tag}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </li>
+              <PostRow key={post.slug} post={post} onTagClick={toggleTag} activeTags={activeTags} />
             ))}
           </ul>
         )}

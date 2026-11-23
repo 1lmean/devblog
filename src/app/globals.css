@@ -3,25 +3,39 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #efeeea;
+  --foreground: #1b1b19;
+  --muted: #6e6c67;
+  --line: #c8c6bf;
+  --accent: #2c3fd4;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
   --font-sans: var(--font-pretendard);
-  --font-mono: var(--font-geist-mono);
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
 .dark {
-  --background: #0a0a0a;
-  --foreground: #ededed;
+  --background: #131312;
+  --foreground: #e8e6e1;
+  --muted: #908e88;
+  --line: #36352f;
+  --accent: #8f9bff;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--background);
 }
 
 /* Syntax highlighting — GitHub light / dark (rehype-highlight) */

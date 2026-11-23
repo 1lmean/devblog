@@ -147,7 +147,7 @@ const components: Components = {
   },
   pre: (props) => (
     <pre
-      className="my-6 overflow-x-auto rounded-xl border border-zinc-200 bg-zinc-50 p-4 font-mono text-sm dark:border-zinc-700 dark:bg-zinc-900"
+      className="my-6 overflow-x-auto rounded-md border border-line bg-foreground/[0.03] p-4 font-mono text-sm"
       {...props}
     />
   ),

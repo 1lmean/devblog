@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { ComponentPropsWithoutRef } from "react";
 
 const baseClass =
-  "inline-flex items-center justify-center rounded-lg border border-none text-zinc-600 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100";
+  "inline-flex items-center justify-center text-muted transition-colors hover:text-foreground";
 
 type NavLinkProps = ComponentPropsWithoutRef<typeof Link> & {
   as?: "link";
