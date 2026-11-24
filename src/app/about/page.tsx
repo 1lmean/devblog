@@ -47,7 +47,7 @@ export default async function About() {
 
   return (
     <main className="page-shell flex-1 pb-28">
-      <PageHeader title="about" subtitle="AI Vision → Frontend → AI Evaluation" />
+      <PageHeader title="about" subtitle="Model → Pipeline → Screen" />
 
       <div className="mt-12">
         <Row as="div" dense label={<span className="uppercase">Profile</span>}>
