@@ -69,7 +69,7 @@ export const experiences: Experience[] = [
         ],
       },
     ],
-    relatedTags: ["Vision", "CV", "JS", "React"],
+    relatedTags: ["Vision", "CV"],
   },
 ];
 
@@ -88,7 +88,15 @@ export const skills: SkillGroup[] = [
   { label: "Tools", items: ["FastAPI", "Docker", "Git", "Playwright", "Vercel"] },
 ];
 
-export const education = [
+export type EducationItem = {
+  period: string;
+  title: string;
+  /** 이 태그가 붙은 글을 항목 아래 Related posts로 연결 */
+  relatedTags?: string[];
+};
+
+export const education: EducationItem[] = [
+  { period: "2025.10 — 2025.12", title: "항해플러스 프론트엔드 7기", relatedTags: ["JS"] },
   { period: "2024.09", title: "ADsP — 한국데이터산업진흥원" },
   { period: "2021.08", title: "동덕여자대학교 컴퓨터학과 졸업" },
   { period: "2019.11", title: "정보처리기사 — 한국산업인력공단" },

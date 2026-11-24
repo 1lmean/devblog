@@ -12,6 +12,36 @@ export const metadata: Metadata = {
 
 const RELATED_LIMIT = 3;
 
+type PostLink = { slug: string; title: string; tags: string[] };
+
+function relatedTo<T extends PostLink>(posts: T[], tags?: string[]): T[] {
+  if (!tags?.length) return [];
+  return posts.filter((post) => post.tags.some((tag) => tags.includes(tag))).slice(0, RELATED_LIMIT);
+}
+
+/** 관련 글 — 데스크톱 1행 3열, 모바일 세로 */
+function RelatedPosts({ posts }: { posts: PostLink[] }) {
+  if (posts.length === 0) return null;
+  return (
+    <div className="mt-5">
+      <p className={`${smallCaps} text-muted`}>Related posts</p>
+      <ul className="mt-2 grid grid-cols-1 gap-x-6 gap-y-1.5 sm:grid-cols-3">
+        {posts.map((post) => (
+          <li key={post.slug} className="min-w-0">
+            <Link
+              href={`/posts/${post.slug}`}
+              className="flex gap-1.5 text-sm leading-6 text-accent transition-opacity hover:opacity-60"
+            >
+              <span aria-hidden>↘</span>
+              <span className="truncate">{post.title}</span>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 export default async function About() {
   const posts = await getAllPosts();
 
@@ -31,11 +61,7 @@ export default async function About() {
         <SectionHeading title="Experience" />
         <ol>
           {experiences.map((exp) => {
-            const related = exp.relatedTags?.length
-              ? posts
-                  .filter((post) => post.tags.some((tag) => exp.relatedTags!.includes(tag)))
-                  .slice(0, RELATED_LIMIT)
-              : [];
+            const related = relatedTo(posts, exp.relatedTags);
 
             return (
               <Row
@@ -66,23 +92,7 @@ export default async function About() {
                   ))}
                 </div>
 
-                {related.length > 0 ? (
-                  <div className="mt-6">
-                    <p className={`${smallCaps} text-muted`}>Related posts</p>
-                    <ul className="mt-1.5 space-y-1">
-                      {related.map((post) => (
-                        <li key={post.slug}>
-                          <Link
-                            href={`/posts/${post.slug}`}
-                            className="text-sm text-accent transition-opacity hover:opacity-60"
-                          >
-                            ↘ {post.title}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ) : null}
+                <RelatedPosts posts={related} />
               </Row>
             );
           })}
@@ -128,6 +138,7 @@ export default async function About() {
           {education.map((item) => (
             <Row key={item.title} dense label={<span className="tabular-nums">{item.period}</span>}>
               <p className="text-sm leading-6 text-foreground">{item.title}</p>
+              <RelatedPosts posts={relatedTo(posts, item.relatedTags)} />
             </Row>
           ))}
         </ul>
