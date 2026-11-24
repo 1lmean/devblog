@@ -43,7 +43,7 @@ export default async function Home() {
 
         {/* 소개 — 왼쪽 작은 인덱스, 오른쪽 정렬 바이오 */}
         <section className="mt-24 grid gap-10 sm:mt-32 sm:grid-cols-2">
-          <dl className="order-2 grid w-fit grid-cols-[auto_auto] gap-x-6 gap-y-1 font-mono text-[11px] leading-5 text-muted sm:order-1 sm:self-end">
+          <dl className="order-2 grid w-fit grid-cols-[auto_auto] gap-x-6 gap-y-1 tabular-nums text-[11px] leading-5 text-muted sm:order-1 sm:self-end">
             {categoryCounts.map(([category, count]) => (
               <div key={category} className="contents">
                 <dt className="uppercase">{category}</dt>
@@ -135,7 +135,7 @@ export default async function Home() {
                 key={project.slug}
                 className="grid grid-cols-[4.5rem_1fr] gap-x-4 border-b border-line py-6 sm:grid-cols-[7rem_7rem_1fr] sm:gap-x-6"
               >
-                <span className="font-mono text-[11px] leading-7 text-muted">
+                <span className="tabular-nums text-[11px] leading-7 text-muted">
                   {String(index + 1).padStart(2, "0")}
                 </span>
                 <span className="hidden text-[11px] leading-7 text-muted sm:block">

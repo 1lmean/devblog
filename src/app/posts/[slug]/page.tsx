@@ -52,7 +52,7 @@ export default async function PostPage(props: Props) {
           <article className="min-w-0 flex-1">
             <PostBackButton />
             <header className="mt-16 sm:mt-24">
-              <div className="flex items-baseline gap-4 font-mono text-[11px] text-muted">
+              <div className="flex items-baseline gap-4 tabular-nums text-[11px] text-muted">
                 {post.category ? <span className="uppercase">{post.category}</span> : null}
                 <time dateTime={post.date}>{formatDotDate(post.date)}</time>
               </div>
