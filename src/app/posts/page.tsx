@@ -16,7 +16,7 @@ export default async function Posts() {
 
   return (
     <div className="flex flex-1 flex-col">
-      <main className="page-shell flex-1 py-12">
+      <main className="page-shell flex-1 pb-12">
         <PostsFilter categories={categories} tags={tags} posts={posts} />
       </main>
     </div>

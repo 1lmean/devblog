@@ -3,6 +3,8 @@ import path from "path";
 import Link from "next/link";
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import { PostRow } from "@/components/PostRow";
+import { ProjectCard } from "@/components/ProjectCard";
+import { SectionHeading } from "@/components/PageLayout";
 import { getAllPosts } from "@/lib/posts";
 import { projects } from "@/lib/projects";
 
@@ -96,12 +98,10 @@ export default async function Home() {
 
         {/* 최근 글 — 뉴스 리스트 */}
         <section className="mt-28 sm:mt-36">
-          <div className="flex items-baseline justify-between border-b border-line pb-4">
-            <h2 className="text-xl font-normal tracking-tight text-foreground">Recent Posts</h2>
-            <p className="hidden text-xs text-muted sm:block">
-              개발하면서 배우거나 공부한 내용들을 기록합니다.
-            </p>
-          </div>
+          <SectionHeading
+            title="Recent Posts"
+            aside="개발하면서 배우거나 공부한 내용들을 기록합니다."
+          />
 
           {posts.length === 0 ? (
             <p className="py-8 text-sm text-muted">아직 글이 없습니다.</p>
@@ -126,42 +126,10 @@ export default async function Home() {
 
         {/* 주요 프로젝트 — 텍스트 행 */}
         <section className="mt-28">
-          <div className="border-b border-line pb-4">
-            <h2 className="text-xl font-normal tracking-tight text-foreground">Featured Projects</h2>
-          </div>
+          <SectionHeading title="Featured Projects" />
           <ul>
-            {projects.slice(0, 1).map((project, index) => (
-              <li
-                key={project.slug}
-                className="grid grid-cols-[4.5rem_1fr] gap-x-4 border-b border-line py-6 sm:grid-cols-[7rem_7rem_1fr] sm:gap-x-6"
-              >
-                <span className="tabular-nums text-[11px] leading-7 text-muted">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                <span className="hidden text-[11px] leading-7 text-muted sm:block">
-                  {project.tech.slice(0, 2).join(" · ")}
-                </span>
-                <div className="min-w-0">
-                  <Link
-                    href={`/projects/${project.slug}`}
-                    className="text-base leading-7 text-foreground hover:underline hover:decoration-1 hover:underline-offset-4 sm:text-lg"
-                  >
-                    {project.title}
-                  </Link>
-                  <p className="mt-1 text-sm leading-6 text-muted">{project.description}</p>
-                  {project.url ? (
-                    <a
-                      href={project.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-2 inline-flex items-center gap-1 text-[10px] font-medium uppercase tracking-[0.12em] text-accent transition-opacity hover:opacity-60"
-                    >
-                      <ArrowUpRight className="h-3 w-3" strokeWidth={1.5} />
-                      Live demo
-                    </a>
-                  ) : null}
-                </div>
-              </li>
+            {projects.slice(0, 3).map((project, index) => (
+              <ProjectCard key={project.slug} project={project} index={index} compact />
             ))}
           </ul>
         </section>
