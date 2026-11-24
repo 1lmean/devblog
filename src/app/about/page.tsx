@@ -43,7 +43,7 @@ export default async function About() {
                 label={<span className="block tabular-nums">{exp.period}</span>}
                 meta={<span className="block break-keep">{exp.company}</span>}
               >
-                <div className="space-y-8">
+                <div className="space-y-6">
                   {exp.roles.map((role) => (
                     <div key={role.title}>
                       <h3 className="flex flex-wrap items-baseline gap-x-3 text-base leading-7 text-foreground sm:text-lg">
@@ -51,11 +51,11 @@ export default async function About() {
                         <span className="text-xs tabular-nums text-muted">{role.period}</span>
                       </h3>
                       <p className="mt-1 break-keep text-sm leading-6 text-muted">{role.summary}</p>
-                      <ul className="mt-5 space-y-4">
+                      <ul className="mt-3 space-y-1 text-sm leading-6">
                         {role.highlights.map((item) => (
-                          <li key={item.title} className="break-keep">
-                            <p className="text-sm font-medium leading-6 text-foreground">{item.title}</p>
-                            <p className="mt-0.5 text-sm leading-6 text-foreground/75">{item.detail}</p>
+                          <li key={item.title} className="flex flex-wrap gap-x-2 break-keep">
+                            <span className="text-foreground">{item.title}</span>
+                            <span className="tabular-nums text-muted">{item.detail}</span>
                           </li>
                         ))}
                       </ul>
@@ -105,14 +105,7 @@ export default async function About() {
                 {project.title}
               </Link>
               <p className="mt-1 break-keep text-sm leading-6 text-muted">{project.summary}</p>
-              <ul className="mt-4 space-y-2 text-sm leading-6 text-foreground">
-                {project.highlights.map((item) => (
-                  <li key={item} className="flex gap-3 break-keep">
-                    <span aria-hidden className="text-muted">—</span>
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
+
             </Row>
           ))}
         </ul>
