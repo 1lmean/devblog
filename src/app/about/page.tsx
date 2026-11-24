@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { PageHeader, Row, SectionHeading, smallCaps } from "@/components/PageLayout";
-import { contacts, education, experiences, intro, skills } from "@/lib/about";
+import { contacts, education, experiences, intro, sideProjects, skills } from "@/lib/about";
 import { getAllPosts } from "@/lib/posts";
 
 export const metadata: Metadata = {
@@ -17,7 +17,7 @@ export default async function About() {
 
   return (
     <main className="page-shell flex-1 pb-28">
-      <PageHeader title="about" subtitle="AI Vision → Frontend → Technical PM" />
+      <PageHeader title="about" subtitle="AI Vision → Frontend → AI Evaluation" />
 
       <div className="mt-12">
         <Row as="div" dense label={<span className="uppercase">Profile</span>}>
@@ -48,16 +48,14 @@ export default async function About() {
                     <div key={role.title}>
                       <h3 className="flex flex-wrap items-baseline gap-x-3 text-base leading-7 text-foreground sm:text-lg">
                         {role.title}
-                        {role.duration ? (
-                          <span className="text-xs text-muted">{role.duration}</span>
-                        ) : null}
+                        <span className="text-xs tabular-nums text-muted">{role.period}</span>
                       </h3>
                       <p className="mt-1 break-keep text-sm leading-6 text-muted">{role.summary}</p>
-                      <ul className="mt-4 space-y-2 text-sm leading-6 text-foreground">
+                      <ul className="mt-5 space-y-4">
                         {role.highlights.map((item) => (
-                          <li key={item} className="flex gap-3 break-keep">
-                            <span aria-hidden className="text-muted">—</span>
-                            <span>{item}</span>
+                          <li key={item.title} className="break-keep">
+                            <p className="text-sm font-medium leading-6 text-foreground">{item.title}</p>
+                            <p className="mt-0.5 text-sm leading-6 text-foreground/75">{item.detail}</p>
                           </li>
                         ))}
                       </ul>
@@ -89,6 +87,35 @@ export default async function About() {
             );
           })}
         </ol>
+      </section>
+
+      <section className="mt-20">
+        <SectionHeading title="Side Project" />
+        <ul>
+          {sideProjects.map((project) => (
+            <Row
+              key={project.title}
+              label={<span className="block tabular-nums">{project.period}</span>}
+              meta={<span className="block">개인 프로젝트</span>}
+            >
+              <Link
+                href={project.href}
+                className="text-base leading-7 text-foreground hover:underline hover:decoration-1 hover:underline-offset-4 sm:text-lg"
+              >
+                {project.title}
+              </Link>
+              <p className="mt-1 break-keep text-sm leading-6 text-muted">{project.summary}</p>
+              <ul className="mt-4 space-y-2 text-sm leading-6 text-foreground">
+                {project.highlights.map((item) => (
+                  <li key={item} className="flex gap-3 break-keep">
+                    <span aria-hidden className="text-muted">—</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </Row>
+          ))}
+        </ul>
       </section>
 
       <section className="mt-20">
