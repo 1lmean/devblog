@@ -59,7 +59,7 @@ export const experiences: Experience[] = [
         ],
       },
       {
-        title: "AI Vision Engineer",
+        title: "ML Engineer · Computer Vision",
         period: "2020.04 — 2024.03",
         summary: "공항 이상행동 탐지 R&D — 탐지·추적·포즈·행동 인식 파이프라인",
         highlights: [
