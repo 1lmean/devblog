@@ -1,87 +1,94 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ExternalLink } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
+import { Row, smallCaps } from "@/components/PageLayout";
 import type { Project } from "@/lib/projects";
 
 type Props = {
   project: Project;
+  index: number;
   onTechClick?: (tech: string) => void;
+  activeTechs?: Set<string>;
+  /** 홈처럼 짧게 보여줄 때 썸네일을 숨긴다 */
+  compact?: boolean;
 };
 
-export function ProjectCard({ project, onTechClick }: Props) {
+const externalLink = `${smallCaps} inline-flex items-center gap-1 text-accent transition-opacity hover:opacity-60`;
+
+/** 프로젝트 한 줄. 글 목록(PostRow)과 같은 3단 그리드를 쓴다. */
+export function ProjectCard({ project, index, onTechClick, activeTechs, compact = false }: Props) {
   return (
-    <li className="py-8 first:pt-0">
-      <article className="group">
+    <Row
+      label={<span className="block tabular-nums">{String(index + 1).padStart(2, "0")}</span>}
+      meta={<span className="block">{project.tech.slice(0, 2).join(" · ")}</span>}
+    >
+      <Link
+        href={`/projects/${project.slug}`}
+        className="group block focus:outline-none focus-visible:ring-1 focus-visible:ring-accent"
+      >
+        <h3 className="text-base leading-7 text-foreground sm:text-lg">
+          <span className="bg-[linear-gradient(currentColor,currentColor)] bg-[length:0%_1px] bg-left-bottom bg-no-repeat transition-[background-size] duration-300 group-hover:bg-[length:100%_1px]">
+            {project.title}
+          </span>
+        </h3>
+        <p className="mt-1 break-keep text-sm leading-6 text-muted">{project.description}</p>
+      </Link>
+
+      <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
+        <Link href={`/projects/${project.slug}`} className={externalLink}>
+          Details
+        </Link>
+        {project.url ? (
+          <a href={project.url} target="_blank" rel="noopener noreferrer" className={externalLink}>
+            <ArrowUpRight className="h-3 w-3" strokeWidth={1.5} />
+            Live
+          </a>
+        ) : null}
+        {project.github ? (
+          <a href={project.github} target="_blank" rel="noopener noreferrer" className={externalLink}>
+            <ArrowUpRight className="h-3 w-3" strokeWidth={1.5} />
+            GitHub
+          </a>
+        ) : null}
+      </div>
+
+      {project.tech.length > 0 ? (
+        <ul className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted">
+          {project.tech.map((tech) => (
+            <li key={tech}>
+              {onTechClick ? (
+                <button
+                  type="button"
+                  onClick={() => onTechClick(tech)}
+                  className={activeTechs?.has(tech) ? "text-accent" : "transition-colors hover:text-foreground"}
+                >
+                  #{tech}
+                </button>
+              ) : (
+                <span>#{tech}</span>
+              )}
+            </li>
+          ))}
+        </ul>
+      ) : null}
+
+      {!compact ? (
         <Link
           href={`/projects/${project.slug}`}
-          className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 dark:focus-visible:ring-zinc-600"
+          className="mt-5 block max-w-xl overflow-hidden border border-line"
+          tabIndex={-1}
+          aria-hidden
         >
-          <div className="relative aspect-[16/9] overflow-hidden rounded-lg border border-zinc-200 bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-900">
-            <Image
-              src={project.thumbnail}
-              alt={`${project.title} 프로젝트 썸네일`}
-              fill
-              sizes="(min-width: 1024px) 896px, calc(100vw - 48px)"
-              className="object-cover transition-transform duration-300 group-hover:scale-[1.015]"
-            />
-          </div>
+          <Image
+            src={project.thumbnail}
+            alt=""
+            width={1680}
+            height={958}
+            sizes="(min-width: 640px) 576px, calc(100vw - 7rem)"
+            className="h-auto w-full"
+          />
         </Link>
-
-        <div className="mt-5">
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-            <Link
-              href={`/projects/${project.slug}`}
-              className="focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 dark:focus-visible:ring-zinc-600"
-            >
-              <h3 className="text-xl font-semibold tracking-tight text-zinc-900 group-hover:underline dark:text-zinc-50">
-                {project.title}
-              </h3>
-            </Link>
-            {project.url ? (
-              <a
-                href={project.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex min-w-0 items-center gap-1.5 text-sm font-medium text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
-              >
-                <ExternalLink className="h-3.5 w-3.5 shrink-0" />
-                <span className="truncate">{project.url.replace(/^https?:\/\//, "")}</span>
-              </a>
-            ) : null}
-          </div>
-
-          <Link
-            href={`/projects/${project.slug}`}
-            className="mt-3 block max-w-3xl text-sm leading-6 text-zinc-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 dark:text-zinc-400 dark:focus-visible:ring-zinc-600"
-          >
-            {project.description}
-          </Link>
-
-          {project.tech.length > 0 ? (
-            <div className="mt-4 flex flex-wrap gap-1.5">
-              {project.tech.map((tech) =>
-                onTechClick ? (
-                  <button
-                    key={tech}
-                    type="button"
-                    onClick={() => onTechClick(tech)}
-                    className="inline-flex rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-medium text-zinc-700 transition-colors hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
-                  >
-                    #{tech}
-                  </button>
-                ) : (
-                  <span
-                    key={tech}
-                    className="inline-flex rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-medium text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
-                  >
-                    #{tech}
-                  </span>
-                ),
-              )}
-            </div>
-          ) : null}
-        </div>
-      </article>
-    </li>
+      ) : null}
+    </Row>
   );
 }

@@ -23,6 +23,9 @@ export function SiteHeader() {
           <Link href="/projects" className={navClass}>
             Projects
           </Link>
+          <Link href="/about" className={navClass}>
+            About
+          </Link>
         </nav>
 
         <div className="flex items-center gap-3 justify-self-end">

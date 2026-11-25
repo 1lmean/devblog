@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Search, X } from "lucide-react";
 import type { SearchablePostMeta } from "@/lib/posts";
 import { PostRow } from "@/components/PostRow";
+import { PageHeader, Row, SectionHeading, chipClass, smallCaps } from "@/components/PageLayout";
 import { filterPostsByQuery, shouldShowTaxonomyFilters } from "@/lib/post-search";
 
 type Props = {
@@ -43,109 +44,105 @@ export function PostsFilter({ categories, tags, posts }: Props) {
   const hasActiveFilter = Boolean(activeCategory || activeTags.size > 0 || searchQuery.trim());
   const showTaxonomyFilters = shouldShowTaxonomyFilters(searchQuery);
 
-  const sectionTitle = "text-xl font-normal tracking-tight text-foreground";
-  const resetButton =
-    "text-[10px] font-medium uppercase tracking-[0.12em] text-accent transition-opacity hover:opacity-60";
-  const toggleClass = (active: boolean) =>
-    [
-      "inline-flex items-baseline gap-1.5 rounded-full border px-3 py-1 text-xs transition-colors",
-      active
-        ? "border-foreground bg-foreground text-background"
-        : "border-line text-foreground hover:border-foreground",
-    ].join(" ");
+  const resetButton = `${smallCaps} text-accent transition-opacity hover:opacity-60`;
+  const filterLabel = (title: string, onReset: (() => void) | null) => (
+    <span className="flex flex-col items-start gap-1">
+      <span className="uppercase">{title}</span>
+      {onReset ? (
+        <button type="button" onClick={onReset} className={resetButton}>
+          Reset
+        </button>
+      ) : null}
+    </span>
+  );
 
   return (
     <>
-      <section className="pt-8 sm:pt-12">
-        <h1 className="border-b border-line pb-1 text-6xl font-light leading-none tracking-[-0.05em] text-foreground sm:text-8xl">
-          blog
-        </h1>
-        <div className="relative mt-10">
-          <label htmlFor="post-search" className="sr-only">
-            검색
-          </label>
-          <Search className="pointer-events-none absolute left-0 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" strokeWidth={1.5} />
-          <input
-            id="post-search"
-            type="text"
-            value={searchQuery}
-            onChange={(event) => setSearchQuery(event.target.value)}
-            placeholder="제목, 설명, 본문 검색"
-            className="h-12 w-full border-b border-line bg-transparent pl-7 pr-9 text-sm text-foreground outline-none transition-colors placeholder:text-muted focus:border-foreground"
-          />
-          {searchQuery && (
-            <button
-              type="button"
-              onClick={() => setSearchQuery("")}
-              aria-label="검색어 지우기"
-              title="검색어 지우기"
-              className="absolute right-0 top-1/2 inline-flex h-7 w-7 -translate-y-1/2 items-center justify-center text-muted transition-colors hover:text-foreground"
+      <PageHeader title="blog" subtitle="개발하면서 배우거나 공부한 내용을 기록합니다." />
+
+      <div className="mt-12">
+        <Row as="div" label={<span className="uppercase">Search</span>} dense>
+          <div className="relative">
+            <label htmlFor="post-search" className="sr-only">
+              검색
+            </label>
+            <Search
+              className="pointer-events-none absolute left-0 top-1/2 h-4 w-4 -translate-y-1/2 text-muted"
+              strokeWidth={1.5}
+            />
+            <input
+              id="post-search"
+              type="text"
+              value={searchQuery}
+              onChange={(event) => setSearchQuery(event.target.value)}
+              placeholder="제목, 설명, 본문 검색"
+              className="h-8 w-full bg-transparent pl-7 pr-9 text-sm text-foreground outline-none placeholder:text-muted"
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery("")}
+                aria-label="검색어 지우기"
+                title="검색어 지우기"
+                className="absolute right-0 top-1/2 inline-flex h-7 w-7 -translate-y-1/2 items-center justify-center text-muted transition-colors hover:text-foreground"
+              >
+                <X className="h-4 w-4" strokeWidth={1.5} />
+              </button>
+            )}
+          </div>
+        </Row>
+
+        {showTaxonomyFilters && (
+          <>
+            <Row
+              as="div"
+              dense
+              label={filterLabel("Category", activeCategory ? () => setActiveCategory(null) : null)}
             >
-              <X className="h-4 w-4" strokeWidth={1.5} />
-            </button>
-          )}
-        </div>
-      </section>
+              {categories.length === 0 ? (
+                <p className="text-sm text-muted">등록된 카테고리가 없습니다.</p>
+              ) : (
+                <div className="flex flex-wrap gap-2">
+                  {categories.map((cat) => (
+                    <button
+                      key={cat}
+                      onClick={() => setActiveCategory(activeCategory === cat ? null : cat)}
+                      className={chipClass(activeCategory === cat)}
+                    >
+                      {cat}
+                      <span className="text-[10px] tabular-nums opacity-60">{countForCategory(cat)}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </Row>
 
-      {showTaxonomyFilters && (
-        <section className="mt-12 grid gap-x-8 gap-y-6 sm:grid-cols-[15rem_1fr]">
-          <div className="flex items-baseline gap-3 sm:block">
-            <h2 className="text-[11px] uppercase tracking-wide text-muted">Category</h2>
-            {activeCategory && (
-              <button onClick={() => setActiveCategory(null)} className={`${resetButton} sm:mt-1`}>
-                Reset
-              </button>
-            )}
-          </div>
-          {categories.length === 0 ? (
-            <p className="text-sm text-muted">등록된 카테고리가 없습니다.</p>
-          ) : (
-            <div className="flex flex-wrap gap-2">
-              {categories.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setActiveCategory(activeCategory === cat ? null : cat)}
-                  className={toggleClass(activeCategory === cat)}
-                >
-                  {cat}
-                  <span className="font-mono text-[10px] opacity-60">{countForCategory(cat)}</span>
-                </button>
-              ))}
-            </div>
-          )}
-
-          <div className="flex items-baseline gap-3 sm:block">
-            <h2 className="text-[11px] uppercase tracking-wide text-muted">Tags</h2>
-            {activeTags.size > 0 && (
-              <button onClick={() => setActiveTags(new Set())} className={`${resetButton} sm:mt-1`}>
-                Reset
-              </button>
-            )}
-          </div>
-          {tags.length === 0 ? (
-            <p className="text-sm text-muted">등록된 태그가 없습니다.</p>
-          ) : (
-            <div className="flex flex-wrap gap-2">
-              {tags.map((tag) => (
-                <button key={tag} onClick={() => toggleTag(tag)} className={toggleClass(activeTags.has(tag))}>
-                  #{tag}
-                  <span className="font-mono text-[10px] opacity-60">{countForTag(tag)}</span>
-                </button>
-              ))}
-            </div>
-          )}
-        </section>
-      )}
+            <Row
+              as="div"
+              dense
+              label={filterLabel("Tags", activeTags.size > 0 ? () => setActiveTags(new Set()) : null)}
+            >
+              {tags.length === 0 ? (
+                <p className="text-sm text-muted">등록된 태그가 없습니다.</p>
+              ) : (
+                <div className="flex flex-wrap gap-2">
+                  {tags.map((tag) => (
+                    <button key={tag} onClick={() => toggleTag(tag)} className={chipClass(activeTags.has(tag))}>
+                      #{tag}
+                      <span className="text-[10px] tabular-nums opacity-60">{countForTag(tag)}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </Row>
+          </>
+        )}
+      </div>
 
       <section className="mt-20 pb-16">
-        <div className="flex items-baseline gap-3 border-b border-line pb-4">
-          <h2 className={sectionTitle}>Posts</h2>
-          <span className="font-mono text-xs text-muted">
-            ({hasActiveFilter ? filtered.length : posts.length})
-          </span>
-        </div>
+        <SectionHeading title="Posts" count={hasActiveFilter ? filtered.length : posts.length} />
         {filtered.length === 0 ? (
-          <p className="py-8 text-sm text-muted">
+          <p className="py-8 text-sm text-muted sm:pl-[17rem]">
             {hasActiveFilter ? "조건에 맞는 글이 없습니다." : "아직 글이 없습니다."}
           </p>
         ) : (

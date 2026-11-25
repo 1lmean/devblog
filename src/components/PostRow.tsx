@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { formatDotDate } from "@/lib/format-date";
 import type { PostMeta } from "@/lib/posts";
+import { Row } from "@/components/PageLayout";
 
 type Props = {
   post: PostMeta;
@@ -15,22 +16,14 @@ type Props = {
  */
 export function PostRow({ post, onTagClick, activeTags }: Props) {
   return (
-    <li className="grid grid-cols-[4.5rem_1fr] gap-x-4 border-b border-line py-6 sm:grid-cols-[7rem_7rem_1fr] sm:gap-x-6">
-      <div className="text-[11px] leading-6 tracking-wide text-muted sm:pt-0.5">
-        <span className="block uppercase">{post.category ?? "Note"}</span>
-        <time dateTime={post.date} className="block font-mono sm:hidden">
+    <Row
+      label={<span className="block uppercase">{post.category ?? "Note"}</span>}
+      meta={
+        <time dateTime={post.date} className="block tabular-nums">
           {formatDotDate(post.date)}
         </time>
-      </div>
-
-      <time
-        dateTime={post.date}
-        className="hidden pt-0.5 font-mono text-[11px] leading-6 text-muted sm:block"
-      >
-        {formatDotDate(post.date)}
-      </time>
-
-      <div className="min-w-0">
+      }
+    >
         <Link
           href={`/posts/${post.slug}`}
           className="group block focus:outline-none focus-visible:ring-1 focus-visible:ring-accent"
@@ -73,7 +66,6 @@ export function PostRow({ post, onTagClick, activeTags }: Props) {
             ))}
           </ul>
         ) : null}
-      </div>
-    </li>
+    </Row>
   );
 }

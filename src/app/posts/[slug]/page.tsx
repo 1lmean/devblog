@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { PostBackButton } from "@/components/PostBackButton";
 import { Markdown } from "@/components/Markdown";
 import { PostMetaLine } from "@/components/TagLinks";
+import { PageHeader } from "@/components/PageLayout";
 import { TableOfContents } from "@/components/TableOfContents";
 import { formatDotDate } from "@/lib/format-date";
 import { getSiteUrl } from "@/lib/site";
@@ -47,23 +48,23 @@ export default async function PostPage(props: Props) {
 
   return (
     <div className="flex flex-1 flex-col">
-      <div className="page-shell flex-1 py-12">
+      <div className="page-shell flex-1 pt-6 pb-12">
         <div className="flex gap-16">
           <article className="min-w-0 flex-1">
             <PostBackButton />
-            <header className="mt-16 sm:mt-24">
-              <div className="flex items-baseline gap-4 font-mono text-[11px] text-muted">
-                {post.category ? <span className="uppercase">{post.category}</span> : null}
-                <time dateTime={post.date}>{formatDotDate(post.date)}</time>
-              </div>
-              <h1 className="mt-4 border-b border-line pb-3 text-4xl font-light leading-[1.15] tracking-[-0.03em] text-foreground sm:text-6xl">
-                {post.title}
-              </h1>
-              {post.description ? (
-                <p className="mt-4 text-lg font-light leading-8 text-foreground/80">{post.description}</p>
-              ) : null}
+            <PageHeader
+              size="detail"
+              title={post.title}
+              subtitle={post.description}
+              meta={
+                <>
+                  {post.category ? <span className="uppercase">{post.category}</span> : null}
+                  <time dateTime={post.date}>{formatDotDate(post.date)}</time>
+                </>
+              }
+            >
               <PostMetaLine post={post} />
-            </header>
+            </PageHeader>
             <div className="pt-14 pb-40">
               <Markdown content={post.content} />
             </div>
