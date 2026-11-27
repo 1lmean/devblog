@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import type { TocItem } from "@/lib/toc";
 
-export function TableOfContents({ items }: { items: TocItem[] }) {
+export function TableOfContents({ items, showTitle = true }: { items: TocItem[]; showTitle?: boolean }) {
   const [activeId, setActiveId] = useState<string>("");
 
   useEffect(() => {
@@ -35,9 +35,9 @@ export function TableOfContents({ items }: { items: TocItem[] }) {
 
   return (
     <nav aria-label="목차">
-      <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
-        목차
-      </p>
+      {showTitle ? (
+        <p className="mb-3 text-[10px] font-medium uppercase tracking-[0.12em] text-muted">Contents</p>
+      ) : null}
       <ul className="space-y-1.5">
         {items.map((item) => (
           <li
@@ -48,12 +48,10 @@ export function TableOfContents({ items }: { items: TocItem[] }) {
               href={`#${item.id}`}
               className={[
                 "block text-sm leading-snug transition-colors",
-                item.level === baseLevel
-                  ? "font-medium"
-                  : "font-normal",
+                item.level === baseLevel ? "" : "text-[13px]",
                 activeId === item.id
-                  ? "text-zinc-900 dark:text-zinc-50"
-                  : "text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200",
+                  ? "text-foreground"
+                  : "text-muted hover:text-foreground",
               ].join(" ")}
             >
               {item.text}
