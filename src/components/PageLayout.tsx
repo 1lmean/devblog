@@ -49,7 +49,13 @@ export function PageHeader({
         {title}
       </h1>
       {subtitle ? (
-        <p className="mt-4 break-keep text-lg font-light leading-8 text-foreground/80 sm:text-xl">
+        <p
+          className={
+            size === "page"
+              ? "mt-4 break-keep text-lg font-light leading-8 text-foreground/80 sm:text-xl"
+              : "mt-4 break-keep text-[15px] leading-7 text-muted"
+          }
+        >
           {subtitle}
         </p>
       ) : null}
